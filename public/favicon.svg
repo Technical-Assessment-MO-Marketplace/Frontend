@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" fill="#3B82F6" rx="20"/>
+  
+  <!-- Marketplace bag/shopping bag icon -->
+  <g fill="#FFFFFF">
+    <!-- Left side of bag -->
+    <path d="M 25 35 L 30 55 L 30 75 Q 30 80 35 80 L 65 80 Q 70 80 70 75 L 70 55 L 75 35 Z"/>
+    
+    <!-- Handle -->
+    <path d="M 35 35 Q 35 20 50 20 Q 65 20 65 35" stroke="#FFFFFF" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- M letter accent -->
+  <text x="50" y="88" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#3B82F6" text-anchor="middle">M</text>
+</svg>
