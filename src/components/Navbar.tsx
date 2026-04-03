@@ -35,7 +35,12 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="flex-shrink-0">
-            <span className="text-xl font-bold text-gray-900">Marketplace</span>
+            <button
+              onClick={() => navigate("/home")}
+              className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer"
+            >
+              MO Marketplace
+            </button>
           </div>
 
           {/* Navigation Items */}
