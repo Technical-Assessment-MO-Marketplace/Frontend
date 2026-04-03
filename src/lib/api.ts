@@ -81,6 +81,10 @@ export const productsApi = {
   getAll: () => api.get("/products"),
   getVariants: (productId: number) =>
     api.get(`/products/${productId}/variants`),
+  findVariant: (productId: number, attributeValueIds: number[]) =>
+    api.get(
+      `/products/${productId}/find-variant?attributeValueIds=${attributeValueIds.join(",")}`,
+    ),
 };
 
 // Admin Products API

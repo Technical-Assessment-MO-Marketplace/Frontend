@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { adminAttributesApi } from "@/lib/api";
-import { Loader, Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import { LoadingSpinner } from "@/components/Loading";
 import { useAuth } from "@/contexts/AuthContext";
 import CreateAttributeModal from "@/components/CreateAttributeModal";
 import AddAttributeValueModal from "@/components/AddAttributeValueModal";
@@ -134,13 +135,8 @@ const Attributes = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <Loader className="w-8 h-8 animate-spin mx-auto mb-2" />
-            <p className="text-gray-600">Loading attributes...</p>
-          </div>
-        </div>
+      <div className="max-w-6xl mx-auto px-4 py-12 flex items-center justify-center h-96">
+        <LoadingSpinner size="md" text="Loading attributes..." />
       </div>
     );
   }

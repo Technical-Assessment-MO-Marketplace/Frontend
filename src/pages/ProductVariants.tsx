@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { productsApi } from "@/lib/api";
-import { Loader, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { LoadingSpinner } from "@/components/Loading";
 
 interface Variant {
   id: number;
-  sku: string;
+  product_id: number;
+  combination_key: string;
   price: number;
   stock: number;
-  color?: string;
-  size?: string;
+  created_at: string;
   [key: string]: any;
 }
 
@@ -22,6 +23,7 @@ const ProductVariants = () => {
   const [error, setError] = useState<string | null>(null);
   const [productName, setProductName] = useState<string>("Product");
 
+  // Fetch variants
   useEffect(() => {
     const fetchVariants = async () => {
       if (!id) {
@@ -32,10 +34,14 @@ const ProductVariants = () => {
 
       try {
         setLoading(true);
-        const response = await productsApi.getVariants(parseInt(id));
-        setVariants(response.data.variants || response.data.data || []);
+        const variantResponse = await productsApi.getVariants(parseInt(id));
+        const variantList =
+          variantResponse.data.variants || variantResponse.data.data || [];
+        setVariants(variantList);
         setProductName(
-          response.data.product_name || response.data.productName || "Product",
+          variantResponse.data.product_name ||
+            variantResponse.data.productName ||
+            "Product",
         );
         setError(null);
       } catch (err: any) {
@@ -51,13 +57,8 @@ const ProductVariants = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <Loader className="w-8 h-8 animate-spin mx-auto mb-2" />
-            <p className="text-gray-600">Loading variants...</p>
-          </div>
-        </div>
+      <div className="max-w-6xl mx-auto px-4 py-12 flex items-center justify-center h-96">
+        <LoadingSpinner size="md" text="Loading variants..." />
       </div>
     );
   }
@@ -111,7 +112,7 @@ const ProductVariants = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
+    <div className="max-w-7xl mx-auto px-4 py-12">
       <Button
         onClick={() => navigate("/products")}
         variant="outline"
@@ -122,95 +123,77 @@ const ProductVariants = () => {
       </Button>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Product Variants</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {productName} - Variants
+        </h1>
         <p className="text-gray-600 mt-2">
-          Available variants for{" "}
-          <span className="font-semibold">{productName}</span>
+          Showing {variants.length} variant{variants.length !== 1 ? "s" : ""}
         </p>
       </div>
 
-      {/* Variants Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {variants.map((variant) => (
-          <div
-            key={variant.id}
-            className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
-          >
-            <div className="mb-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  SKU: {variant.sku}
-                </h3>
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  Variant {variant.id}
-                </span>
-              </div>
-              <p className="text-gray-600 text-sm">ID: {variant.id}</p>
-            </div>
-
-            {/* Variant Details */}
-            <div className="space-y-3 mb-4">
-              <div>
-                <label className="text-xs font-medium text-gray-500">
-                  Price
-                </label>
-                <p className="text-2xl font-bold text-green-600">
+      {/* Variants Table */}
+      <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+        <table className="w-full">
+          <thead className="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                ID
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Combination Key
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Price
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Stock
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                Created At
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {variants.map((variant, index) => (
+              <tr
+                key={variant.id}
+                className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
+                  index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                }`}
+              >
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  {variant.id}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-600 font-mono">
+                  {variant.combination_key}
+                </td>
+                <td className="px-6 py-4 text-sm font-semibold text-green-600">
                   ${variant.price?.toFixed(2) || "N/A"}
-                </p>
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-gray-500">
-                  Stock
-                </label>
-                <p
-                  className={`text-lg font-semibold ${variant.stock > 0 ? "text-green-600" : "text-red-600"}`}
-                >
-                  {variant.stock !== undefined
-                    ? `${variant.stock} units`
-                    : "N/A"}
-                </p>
-              </div>
-
-              {variant.color && (
-                <div>
-                  <label className="text-xs font-medium text-gray-500">
-                    Color
-                  </label>
-                  <p className="text-sm text-gray-900">{variant.color}</p>
-                </div>
-              )}
-
-              {variant.size && (
-                <div>
-                  <label className="text-xs font-medium text-gray-500">
-                    Size
-                  </label>
-                  <p className="text-sm text-gray-900">{variant.size}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Stock Status Badge */}
-            <div className="pt-4 border-t border-gray-200">
-              {variant.stock > 0 ? (
-                <span className="inline-block bg-green-50 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
-                  ✓ In Stock
-                </span>
-              ) : (
-                <span className="inline-block bg-red-50 text-red-700 text-xs font-medium px-3 py-1 rounded-full">
-                  ✗ Out of Stock
-                </span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Summary */}
-      <div className="mt-8 text-sm text-gray-600">
-        Showing <span className="font-semibold">{variants.length}</span> variant
-        {variants.length !== 1 ? "s" : ""}
+                </td>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  {variant.stock} units
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  {variant.stock > 0 ? (
+                    <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                      ✓ In Stock
+                    </span>
+                  ) : (
+                    <span className="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-medium">
+                      ✗ Out of Stock
+                    </span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-600">
+                  {new Date(variant.created_at).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
