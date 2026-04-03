@@ -41,14 +41,25 @@ const Navbar = () => {
           {/* Navigation Items */}
           <div className="flex items-center space-x-4">
             {isAuthenticated && isAdmin && (
-              <Button
-                onClick={() => setShowCreateAdminModal(true)}
-                size="sm"
-                className="flex items-center gap-1 text-xs"
-              >
-                <Plus className="w-3 h-3" />
-                Create Admin
-              </Button>
+              <>
+                <Button
+                  onClick={() => setShowCreateAdminModal(true)}
+                  size="sm"
+                  className="flex items-center gap-1 text-xs"
+                >
+                  <Plus className="w-3 h-3" />
+                  Create Admin
+                </Button>
+
+                <Button
+                  onClick={() => navigate("/attributes")}
+                  size="sm"
+                  variant="outline"
+                  className="text-xs"
+                >
+                  Attributes
+                </Button>
+              </>
             )}
 
             {isAuthenticated && (

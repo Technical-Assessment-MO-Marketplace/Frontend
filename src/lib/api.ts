@@ -79,6 +79,37 @@ export const authApi = {
 // Products API
 export const productsApi = {
   getAll: () => api.get("/products"),
+  getVariants: (productId: number) =>
+    api.get(`/products/${productId}/variants`),
+};
+
+// Admin Products API
+export const adminProductsApi = {
+  create: (data: { name: string; description: string }) =>
+    api.post("/admin/products", data),
+  update: (productId: number, data: { name: string; description: string }) =>
+    api.patch(`/admin/products/${productId}`, data),
+  delete: (productId: number) => api.delete(`/admin/products/${productId}`),
+  createVariant: (data: {
+    product_id: number;
+    price: number;
+    stock: number;
+    attributeValueIds: number[];
+  }) => api.post("/admin/products/variants", data),
+};
+
+// Admin Attributes API
+export const adminAttributesApi = {
+  create: (data: { name: string }) => api.post("/admin/attributes", data),
+  getAll: () => api.get("/admin/attributes"),
+  delete: (attributeId: number) =>
+    api.delete(`/admin/attributes/${attributeId}`),
+  getValues: (attributeId: number) =>
+    api.get(`/admin/attributes/attribute/${attributeId}/values`),
+  addValue: (data: { attribute_id: number; value: string }) =>
+    api.post("/admin/attributes/values", data),
+  deleteValue: (valueId: number) =>
+    api.delete(`/admin/attributes/values/${valueId}`),
 };
 
 export default api;

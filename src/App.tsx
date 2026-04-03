@@ -10,6 +10,8 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Profile from "@/pages/Profile";
 import Products from "@/pages/Products";
+import ProductVariants from "@/pages/ProductVariants";
+import Attributes from "@/pages/Attributes";
 
 const queryClient = new QueryClient();
 
@@ -30,8 +32,9 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route
               path="/products/:id/variants"
-              element={<div>Variants Page</div>}
+              element={<ProductVariants />}
             />
+            <Route path="/attributes" element={<Attributes />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </AuthProvider>
