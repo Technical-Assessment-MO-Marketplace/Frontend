@@ -76,4 +76,9 @@ export const authApi = {
     api.post("/auth/admin/create", data),
 };
 
+// Products API
+export const productsApi = {
+  getAll: () => api.get("/products"),
+};
+
 export default api;

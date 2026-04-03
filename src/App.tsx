@@ -9,6 +9,7 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Profile from "@/pages/Profile";
+import Products from "@/pages/Products";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,11 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/products" element={<Products />} />
+            <Route
+              path="/products/:id/variants"
+              element={<div>Variants Page</div>}
+            />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </AuthProvider>

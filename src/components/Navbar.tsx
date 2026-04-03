@@ -8,7 +8,7 @@ import ProfileDropdown from "./ProfileDropdown.tsx";
 import CreateAdminModal from "./CreateAdminModal.tsx";
 
 const Navbar = () => {
-  const { isAuthenticated, isAdmin, user } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
@@ -46,8 +46,19 @@ const Navbar = () => {
                 size="sm"
                 className="flex items-center gap-1 text-xs"
               >
-                <Plus className="w-2 h-2" />
+                <Plus className="w-3 h-3" />
                 Create Admin
+              </Button>
+            )}
+
+            {isAuthenticated && (
+              <Button
+                onClick={() => navigate("/products")}
+                size="sm"
+                variant="outline"
+                className="text-xs"
+              >
+                Products
               </Button>
             )}
 

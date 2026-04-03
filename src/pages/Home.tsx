@@ -86,19 +86,23 @@ const Home = () => {
             </CardContent>
           </Card>
 
-          {/* Info Card */}
+          {/* Products Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Getting Started</CardTitle>
-              <CardDescription>Learn how to use the platform</CardDescription>
+              <CardTitle>Products</CardTitle>
+              <CardDescription>Browse all products</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600 mb-4">
-                Get started with MO Marketplace and explore all the features
-                available.
+                View all available products and their variants on the
+                marketplace.
               </p>
-              <Button variant="outline" className="w-full">
-                Help Center
+              <Button
+                onClick={() => navigate("/products")}
+                variant="outline"
+                className="w-full"
+              >
+                Browse Products
               </Button>
             </CardContent>
           </Card>
