@@ -85,7 +85,7 @@ const EditProductModal = ({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <ErrorInline message={error} />
+          {error && <ErrorInline message={error} />}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
