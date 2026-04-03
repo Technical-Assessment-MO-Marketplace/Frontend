@@ -67,16 +67,15 @@ const Navbar = () => {
               </>
             )}
 
-            {isAuthenticated && (
-              <Button
-                onClick={() => navigate("/products")}
-                size="sm"
-                variant="outline"
-                className="text-xs"
-              >
-                Products
-              </Button>
-            )}
+            {/* Products Button - Always Visible */}
+            <Button
+              onClick={() => navigate("/products")}
+              size="sm"
+              variant="outline"
+              className="text-xs"
+            >
+              Products
+            </Button>
 
             {!isAuthenticated ? (
               <Button onClick={() => navigate("/login")}>Login</Button>
