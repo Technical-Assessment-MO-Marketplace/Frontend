@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import { authApi } from "@/lib/api";
 
 interface User {
@@ -8,6 +15,7 @@ interface User {
   email: string;
   role_id?: number;
   roleId?: number;
+  role?: string | number;
 }
 
 interface AuthContextType {
@@ -23,7 +31,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,10 +60,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     saveAuth(data.access_token, data.user);
   }, []);
 
-  const register = useCallback(async (name: string, email: string, password: string) => {
-    const { data } = await authApi.register({ name, email, password });
-    saveAuth(data.access_token, data.user);
-  }, []);
+  const register = useCallback(
+    async (name: string, email: string, password: string) => {
+      const { data } = await authApi.register({ name, email, password });
+      saveAuth(data.access_token, data.user);
+    },
+    [],
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem("mo_token");
@@ -62,14 +75,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   }, []);
 
-  const roleId = user?.role_id ?? user?.roleId;
-  const isAdmin = roleId === 1;
-  const isAuthenticated = !!token;
+  // Calculate isAdmin - check multiple role fields
+  const isAdmin = useMemo(() => {
+    if (!user) return false;
+
+    // Check various possible role ID values
+    const roleId = user.roleId ?? user.role_id;
+    const isAdminRole = user.role === "admin" || user.role === 1;
+
+    return roleId === 1 || isAdminRole;
+  }, [user]);
+
+  const isAuthenticated = useMemo(() => !!token, [token]);
+
+  const contextValue = useMemo(
+    () => ({
+      user,
+      token,
+      isAdmin,
+      isAuthenticated,
+      loading,
+      login,
+      register,
+      logout,
+    }),
+    [user, token, isAdmin, isAuthenticated, loading, login, register, logout],
+  );
 
   return (
-    <AuthContext.Provider value={{ user, token, isAdmin, isAuthenticated, loading, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { CircleUserRound } from "lucide-react";
+import { CircleUserRound, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "./ProfileDropdown.tsx";
+import CreateAdminModal from "./CreateAdminModal.tsx";
 
 const Navbar = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin, user } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -37,6 +40,17 @@ const Navbar = () => {
 
           {/* Navigation Items */}
           <div className="flex items-center space-x-4">
+            {isAuthenticated && isAdmin && (
+              <Button
+                onClick={() => setShowCreateAdminModal(true)}
+                size="sm"
+                className="flex items-center gap-1 text-xs"
+              >
+                <Plus className="w-2 h-2" />
+                Create Admin
+              </Button>
+            )}
+
             {!isAuthenticated ? (
               <Button onClick={() => navigate("/login")}>Login</Button>
             ) : (
@@ -57,6 +71,14 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <CreateAdminModal
+        isOpen={showCreateAdminModal}
+        onClose={() => setShowCreateAdminModal(false)}
+        onSuccess={() => {
+          toast.success("Admin user created successfully!");
+        }}
+      />
     </nav>
   );
 };
