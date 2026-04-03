@@ -24,7 +24,7 @@ const Register = () => {
 
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
-      navigate("/register", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [isAuthenticated, authLoading, navigate]);
 
@@ -35,9 +35,8 @@ const Register = () => {
       await register(name, email, password);
       toast({
         title: "Account created successfully",
-        description: "Redirecting to login...",
+        description: "Redirecting to home...",
       });
-      setTimeout(() => navigate("/login"), 1200);
     } catch (err: any) {
       const errorMessage = err.message || "Could not create account";
       toast({
