@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { adminProductsApi } from "@/lib/api";
 import { toast } from "sonner";
+import { ErrorInline } from "@/components/Error";
 
 interface CreateProductModalProps {
   isOpen: boolean;
@@ -71,11 +72,7 @@ const CreateProductModal = ({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-              {error}
-            </div>
-          )}
+          {error && <ErrorInline message={error} />
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

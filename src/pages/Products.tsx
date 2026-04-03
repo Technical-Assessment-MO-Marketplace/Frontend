@@ -2,14 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { productsApi } from "@/lib/api";
-import {
-  ChevronRight,
-  Plus,
-  Edit2,
-  Trash2,
-  Package,
-} from "lucide-react";
+import { ChevronRight, Plus, Edit2, Trash2, Package } from "lucide-react";
 import { LoadingSpinner } from "@/components/Loading";
+import { ErrorCard } from "@/components/Error";
 import { useAuth } from "@/contexts/AuthContext";
 import CreateProductModal from "@/components/CreateProductModal";
 import EditProductModal from "@/components/EditProductModal";
@@ -62,18 +57,7 @@ const Products = () => {
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700">
-          <h2 className="text-lg font-semibold mb-2">Error</h2>
-          <p>{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorCard message={error} onRetry={() => window.location.reload()} />
     );
   }
 

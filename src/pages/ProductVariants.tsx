@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { productsApi } from "@/lib/api";
 import { ChevronLeft } from "lucide-react";
 import { LoadingSpinner } from "@/components/Loading";
+import { ErrorCard } from "@/components/Error";
 
 interface Variant {
   id: number;
@@ -74,16 +75,11 @@ const ProductVariants = () => {
           <ChevronLeft className="w-4 h-4" />
           Back to Products
         </Button>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700">
-          <h2 className="text-lg font-semibold mb-2">Error</h2>
-          <p>{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-          >
-            Retry
-          </Button>
-        </div>
+        <ErrorCard
+          message={error}
+          onRetry={() => window.location.reload()}
+          containerClass=""
+        />
       </div>
     );
   }

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { adminAttributesApi } from "@/lib/api";
 import { Plus, Trash2, ChevronDown, ChevronUp } from "lucide-react";
 import { LoadingSpinner } from "@/components/Loading";
+import { ErrorCard, AccessDenied } from "@/components/Error";
 import { useAuth } from "@/contexts/AuthContext";
 import CreateAttributeModal from "@/components/CreateAttributeModal";
 import AddAttributeValueModal from "@/components/AddAttributeValueModal";
@@ -123,14 +124,7 @@ const Attributes = () => {
   };
 
   if (!isAdmin) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-yellow-700">
-          <h2 className="text-lg font-semibold mb-2">Access Denied</h2>
-          <p>Only administrators can access this page.</p>
-        </div>
-      </div>
-    );
+    return <AccessDenied />;
   }
 
   if (loading) {
@@ -143,18 +137,7 @@ const Attributes = () => {
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700">
-          <h2 className="text-lg font-semibold mb-2">Error</h2>
-          <p>{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorCard message={error} onRetry={() => window.location.reload()} />
     );
   }
 
@@ -202,10 +185,6 @@ const Attributes = () => {
                   <h3 className="text-lg font-semibold text-gray-900">
                     {attribute.name}
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    ID: {attribute.id} • Values:{" "}
-                    {attributeValues[attribute.id]?.length || 0}
-                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   {expandedId === attribute.id ? (
@@ -244,11 +223,8 @@ const Attributes = () => {
                   </div>
 
                   {loadingValuesId === attribute.id ? (
-                    <div className="text-center py-4">
-                      <Loader className="w-5 h-5 animate-spin mx-auto" />
-                      <p className="text-gray-600 text-sm mt-2">
-                        Loading values...
-                      </p>
+                    <div className="py-4">
+                      <LoadingSpinner size="sm" text="Loading values..." />
                     </div>
                   ) : (attributeValues[attribute.id] || []).length === 0 ? (
                     <div className="bg-gray-50 rounded p-4 text-center text-gray-600 text-sm">

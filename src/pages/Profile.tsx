@@ -3,6 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api";
+import { LoadingSpinner } from "@/components/Loading";
+import { ErrorCard } from "@/components/Error";
 
 interface ProfileData {
   id?: number;
@@ -47,27 +49,19 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <p className="text-gray-600">Loading profile...</p>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-12 flex items-center justify-center h-96">
+        <LoadingSpinner size="md" text="Loading profile..." />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <p className="text-red-600 mb-4">Error: {error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorCard
+        message={error}
+        onRetry={() => window.location.reload()}
+        containerClass="max-w-4xl mx-auto px-4 py-12"
+      />
     );
   }
 
