@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { productsApi } from "@/lib/api";
-import { Loader, ChevronLeft } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { productsApi, adminProductsApi } from "@/lib/api";
+import { Loader, ChevronLeft, Edit2, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Variant {
   id: number;
-  sku: string;
+  product_id: number;
+  attributes: string;
   price: number;
   stock: number;
-  color?: string;
-  size?: string;
+  created_at?: string;
   [key: string]: any;
 }
 
@@ -20,7 +22,11 @@ const ProductVariants = () => {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [productName, setProductName] = useState<string>("Product");
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+  const [newStock, setNewStock] = useState<string>("");
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const fetchVariants = async () => {
@@ -34,9 +40,6 @@ const ProductVariants = () => {
         setLoading(true);
         const response = await productsApi.getVariants(parseInt(id));
         setVariants(response.data.variants || response.data.data || []);
-        setProductName(
-          response.data.product_name || response.data.productName || "Product",
-        );
         setError(null);
       } catch (err: any) {
         const errorMessage = err.message || "Failed to load variants";
@@ -48,6 +51,70 @@ const ProductVariants = () => {
 
     fetchVariants();
   }, [id]);
+
+  const handleUpdateStock = async () => {
+    if (!selectedVariant || !id) return;
+
+    if (!newStock.trim()) {
+      toast.error("Please enter a stock value");
+      return;
+    }
+
+    const stockValue = parseInt(newStock);
+    if (isNaN(stockValue) || stockValue < 0) {
+      toast.error("Please enter a valid stock value");
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      await adminProductsApi.updateVariant(parseInt(id), selectedVariant.id, {
+        stock: stockValue,
+      });
+      toast.success("Stock updated successfully!");
+      setIsUpdateModalOpen(false);
+      setNewStock("");
+      setSelectedVariant(null);
+
+      // Refresh variants
+      const response = await productsApi.getVariants(parseInt(id));
+      setVariants(response.data.variants || response.data.data || []);
+    } catch (err: any) {
+      const errorMessage = err.message || "Failed to update stock";
+      toast.error(errorMessage);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteVariant = async (variant: Variant) => {
+    if (!window.confirm("Are you sure you want to delete this variant?")) {
+      return;
+    }
+
+    if (!id) return;
+
+    setIsDeleting(true);
+    try {
+      await adminProductsApi.deleteVariant(parseInt(id), variant.id);
+      toast.success("Variant deleted successfully!");
+
+      // Refresh variants
+      const response = await productsApi.getVariants(parseInt(id));
+      setVariants(response.data.variants || response.data.data || []);
+    } catch (err: any) {
+      const errorMessage = err.message || "Failed to delete variant";
+      toast.error(errorMessage);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleUpdateClick = (variant: Variant) => {
+    setSelectedVariant(variant);
+    setNewStock(variant.stock.toString());
+    setIsUpdateModalOpen(true);
+  };
 
   if (loading) {
     return (
@@ -125,86 +192,96 @@ const ProductVariants = () => {
         <h1 className="text-3xl font-bold text-gray-900">Product Variants</h1>
         <p className="text-gray-600 mt-2">
           Available variants for{" "}
-          <span className="font-semibold">{productName}</span>
+          <span className="font-semibold">Product #{id}</span>
         </p>
       </div>
 
-      {/* Variants Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {variants.map((variant) => (
-          <div
-            key={variant.id}
-            className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
-          >
-            <div className="mb-4">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  SKU: {variant.sku}
-                </h3>
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  Variant {variant.id}
-                </span>
-              </div>
-              <p className="text-gray-600 text-sm">ID: {variant.id}</p>
-            </div>
-
-            {/* Variant Details */}
-            <div className="space-y-3 mb-4">
-              <div>
-                <label className="text-xs font-medium text-gray-500">
-                  Price
-                </label>
-                <p className="text-2xl font-bold text-green-600">
+      {/* Variants Table */}
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-100 border-b border-gray-200">
+            <tr>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                Variant ID
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                Attributes
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                Price
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                Stock
+              </th>
+              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                Status
+              </th>
+              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {variants.map((variant) => (
+              <tr
+                key={variant.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                  #{variant.id}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900">
+                  {variant.attributes}
+                </td>
+                <td className="px-6 py-4 text-sm font-semibold text-green-600">
                   ${variant.price?.toFixed(2) || "N/A"}
-                </p>
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-gray-500">
-                  Stock
-                </label>
-                <p
-                  className={`text-lg font-semibold ${variant.stock > 0 ? "text-green-600" : "text-red-600"}`}
-                >
-                  {variant.stock !== undefined
-                    ? `${variant.stock} units`
-                    : "N/A"}
-                </p>
-              </div>
-
-              {variant.color && (
-                <div>
-                  <label className="text-xs font-medium text-gray-500">
-                    Color
-                  </label>
-                  <p className="text-sm text-gray-900">{variant.color}</p>
-                </div>
-              )}
-
-              {variant.size && (
-                <div>
-                  <label className="text-xs font-medium text-gray-500">
-                    Size
-                  </label>
-                  <p className="text-sm text-gray-900">{variant.size}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Stock Status Badge */}
-            <div className="pt-4 border-t border-gray-200">
-              {variant.stock > 0 ? (
-                <span className="inline-block bg-green-50 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
-                  ✓ In Stock
-                </span>
-              ) : (
-                <span className="inline-block bg-red-50 text-red-700 text-xs font-medium px-3 py-1 rounded-full">
-                  ✗ Out of Stock
-                </span>
-              )}
-            </div>
-          </div>
-        ))}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900">
+                  <span
+                    className={
+                      variant.stock > 0
+                        ? "text-green-600 font-semibold"
+                        : "text-red-600 font-semibold"
+                    }
+                  >
+                    {variant.stock ?? "N/A"}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-center">
+                  {variant.stock > 0 ? (
+                    <span className="inline-block bg-green-50 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
+                      ✓ In Stock
+                    </span>
+                  ) : (
+                    <span className="inline-block bg-red-50 text-red-700 text-xs font-medium px-3 py-1 rounded-full">
+                      ✗ Out of Stock
+                    </span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-center">
+                  <div className="flex gap-2 justify-center">
+                    <Button
+                      onClick={() => handleUpdateClick(variant)}
+                      disabled={isUpdating}
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-1"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteVariant(variant)}
+                      disabled={isDeleting}
+                      size="sm"
+                      className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Summary */}
@@ -212,6 +289,55 @@ const ProductVariants = () => {
         Showing <span className="font-semibold">{variants.length}</span> variant
         {variants.length !== 1 ? "s" : ""}
       </div>
+
+      {/* Update Stock Modal */}
+      {isUpdateModalOpen && selectedVariant && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Update Stock
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Variant ID: {selectedVariant.id} ({selectedVariant.attributes})
+            </p>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                New Stock Value
+              </label>
+              <Input
+                type="number"
+                value={newStock}
+                onChange={(e) => setNewStock(e.target.value)}
+                placeholder="Enter stock quantity"
+                min="0"
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <Button
+                onClick={() => {
+                  setIsUpdateModalOpen(false);
+                  setNewStock("");
+                  setSelectedVariant(null);
+                }}
+                variant="outline"
+                className="flex-1"
+                disabled={isUpdating}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdateStock}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                disabled={isUpdating}
+              >
+                {isUpdating ? "Updating..." : "Update Stock"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

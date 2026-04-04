@@ -90,12 +90,21 @@ export const adminProductsApi = {
   update: (productId: number, data: { name: string; description: string }) =>
     api.patch(`/admin/products/${productId}`, data),
   delete: (productId: number) => api.delete(`/admin/products/${productId}`),
-  createVariant: (data: {
-    product_id: number;
-    price: number;
-    stock: number;
-    attributeValueIds: number[];
-  }) => api.post("/admin/products/variants", data),
+  createVariant: (
+    productId: number,
+    data: {
+      price: number;
+      stock: number;
+      attributeValueIds: number[];
+    },
+  ) => api.post(`/admin/products/${productId}/variants`, data),
+  updateVariant: (
+    productId: number,
+    variantId: number,
+    data: { stock: number },
+  ) => api.patch(`/admin/products/${productId}/variants/${variantId}`, data),
+  deleteVariant: (productId: number, variantId: number) =>
+    api.delete(`/admin/products/${productId}/variants/${variantId}`),
 };
 
 // Admin Attributes API
@@ -106,8 +115,8 @@ export const adminAttributesApi = {
     api.delete(`/admin/attributes/${attributeId}`),
   getValues: (attributeId: number) =>
     api.get(`/admin/attributes/attribute/${attributeId}/values`),
-  addValue: (data: { attribute_id: number; value: string }) =>
-    api.post("/admin/attributes/values", data),
+  addValue: (attributeId: number, data: { value: string }) =>
+    api.post(`/admin/attributes/${attributeId}/values`, data),
   deleteValue: (valueId: number) =>
     api.delete(`/admin/attributes/values/${valueId}`),
 };

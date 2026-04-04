@@ -34,8 +34,7 @@ const AddAttributeValueModal = ({
         return;
       }
 
-      await adminAttributesApi.addValue({
-        attribute_id: attributeId,
+      await adminAttributesApi.addValue(attributeId, {
         value: value.trim(),
       });
 

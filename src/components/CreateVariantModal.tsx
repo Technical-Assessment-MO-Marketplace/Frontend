@@ -102,13 +102,12 @@ const CreateVariantModal = ({
       );
 
       const payload = {
-        product_id: productId,
         price: parseFloat(price),
         stock: parseInt(stock),
         attributeValueIds,
       };
 
-      await adminProductsApi.createVariant(payload);
+      await adminProductsApi.createVariant(productId, payload);
 
       toast.success("Variant created successfully!");
       setPrice("");
