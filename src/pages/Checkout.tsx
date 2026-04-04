@@ -272,19 +272,41 @@ const Checkout = () => {
             </div>
 
             {/* Stock Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-              <p className="text-sm text-blue-900">
-                <span className="font-semibold">✓ In Stock:</span>{" "}
-                {variant.stock} items available
-              </p>
-            </div>
+            {variant.stock === 0 ? (
+              <div className="bg-red-50 border border-red-300 rounded-lg p-3">
+                <p className="text-sm text-red-900 font-semibold">
+                  ✕ Out of Stock
+                </p>
+                <p className="text-xs text-red-700 mt-1">
+                  This item is currently unavailable
+                </p>
+              </div>
+            ) : (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-sm text-blue-900">
+                  <span className="font-semibold">✓ In Stock:</span>{" "}
+                  {variant.stock} items available
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Checkout Form */}
         <div className="lg:col-span-2">
+          {variant.stock === 0 && (
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+              <p className="font-semibold">Out of Stock</p>
+              <p className="text-sm">
+                This item is currently unavailable. Please check back later.
+              </p>
+            </div>
+          )}
+
           {/* Shipping Information */}
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <div
+            className={`bg-white rounded-lg shadow p-6 mb-6 ${variant.stock === 0 ? "opacity-50 pointer-events-none" : ""}`}
+          >
             <h3 className="text-lg font-bold text-gray-900 mb-4">
               Shipping Information
             </h3>
@@ -366,7 +388,9 @@ const Checkout = () => {
           </div>
 
           {/* Payment Method Selection */}
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <div
+            className={`bg-white rounded-lg shadow p-6 mb-6 ${variant.stock === 0 ? "opacity-50 pointer-events-none" : ""}`}
+          >
             <h3 className="text-lg font-bold text-gray-900 mb-4">
               Payment Method
             </h3>
@@ -478,30 +502,39 @@ const Checkout = () => {
           </div>
 
           {/* Order Button */}
-          <Button
-            onClick={() => {
-              if (!paymentMethod) {
-                toast.error("Please select a payment method");
-                return;
-              }
-              if (paymentMethod === "cod") {
-                handleCODOrder();
-              } else {
-                handleCardPayment();
-              }
-            }}
-            disabled={!paymentMethod || processingPayment}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold"
-          >
-            {processingPayment ? (
-              <span className="flex items-center justify-center gap-2">
-                <Loader className="w-5 h-5 animate-spin" />
-                Processing...
-              </span>
-            ) : (
-              `Place Order - $${totalPrice.toFixed(2)}`
-            )}
-          </Button>
+          {variant.stock === 0 ? (
+            <Button
+              disabled={true}
+              className="w-full bg-gray-400 cursor-not-allowed text-white py-3 text-lg font-semibold"
+            >
+              Out of Stock
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                if (!paymentMethod) {
+                  toast.error("Please select a payment method");
+                  return;
+                }
+                if (paymentMethod === "cod") {
+                  handleCODOrder();
+                } else {
+                  handleCardPayment();
+                }
+              }}
+              disabled={!paymentMethod || processingPayment}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold"
+            >
+              {processingPayment ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader className="w-5 h-5 animate-spin" />
+                  Processing...
+                </span>
+              ) : (
+                `Place Order - $${totalPrice.toFixed(2)}`
+              )}
+            </Button>
+          )}
 
           {/* Security Info */}
           <p className="text-center text-sm text-gray-600 mt-4">
