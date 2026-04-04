@@ -116,6 +116,17 @@ const ProductVariants = () => {
     setIsUpdateModalOpen(true);
   };
 
+  const handleOrderVariant = (variant: Variant) => {
+    if (variant.stock <= 0) {
+      toast.error("This variant is out of stock");
+      return;
+    }
+    toast.success(
+      `Order placed for variant #${variant.id} (${variant.attributes}) at $${variant.price.toFixed(2)}`,
+    );
+    // You can add order API call here if needed
+  };
+
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-12">
@@ -217,6 +228,9 @@ const ProductVariants = () => {
                 Status
               </th>
               <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                Order
+              </th>
+              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                 Actions
               </th>
             </tr>
@@ -257,6 +271,17 @@ const ProductVariants = () => {
                       ✗ Out of Stock
                     </span>
                   )}
+                </td>
+                <td className="px-6 py-4 text-center">
+                  <Button
+                    onClick={() => handleOrderVariant(variant)}
+                    disabled={variant.stock <= 0}
+                    size="sm"
+                    className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-1"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Order
+                  </Button>
                 </td>
                 <td className="px-6 py-4 text-center">
                   <div className="flex gap-2 justify-center">
