@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api";
 
 interface ProfileData {
-  id?: number;
-  userId?: number;
-  name?: string;
   email: string;
-  role_id?: number;
-  roleId?: number;
-  [key: string]: any;
 }
 
 const Profile = () => {
@@ -47,9 +41,10 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <p className="text-gray-600">Loading profile...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
+        <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading profile...</p>
         </div>
       </div>
     );
@@ -57,12 +52,18 @@ const Profile = () => {
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <p className="text-red-600 mb-4">Error: {error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
+        <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
+              <span className="text-red-600 text-2xl font-bold">⚠️</span>
+            </div>
+          </div>
+          <p className="text-red-600 mb-6 text-lg font-semibold">Error</p>
+          <p className="text-gray-600 mb-4">{error}</p>
           <Button
             onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="w-full bg-black hover:bg-gray-800 text-white py-2 rounded-lg font-semibold"
           >
             Retry
           </Button>
@@ -72,52 +73,41 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Profile</h1>
-
-        {profileData ? (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Name
-              </label>
-              <p className="mt-1 text-gray-900">{profileData.name || "N/A"}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
+      <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full">
+        <div className="text-center">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-full">
+              <span className="text-white text-2xl font-bold">👤</span>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <p className="mt-1 text-gray-900">{profileData.email}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                User ID
-              </label>
-              <p className="mt-1 text-gray-900">
-                {profileData.userId || profileData.id || "N/A"}
-              </p>
-            </div>
-            {profileData.roleId && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Role ID
-                </label>
-                <p className="mt-1 text-gray-900">{profileData.roleId}</p>
-              </div>
-            )}
           </div>
-        ) : (
-          <p className="text-gray-600">No profile data available</p>
-        )}
 
-        <div className="mt-8">
-          <Button
-            onClick={() => navigate("/")}
-            className="bg-gray-600 hover:bg-gray-700 text-white"
-          >
-            Back
-          </Button>
+          {profileData ? (
+            <div className="space-y-4">
+              <h1 className="text-4xl font-bold text-black">
+                Hello!
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Profile retrieved successfully
+              </p>
+
+              <div className="bg-gray-50 rounded-lg p-6 mt-8">
+                <p className="text-sm text-gray-600 font-medium mb-2">Email Address</p>
+                <p className="text-2xl font-semibold text-gray-900 break-all">
+                  {profileData.email}
+                </p>
+              </div>
+
+              <Button
+                onClick={() => navigate("/")}
+                className="mt-8 w-full bg-black hover:bg-gray-800 text-white py-2 rounded-lg font-semibold"
+              >
+                Back
+              </Button>
+            </div>
+          ) : (
+            <p className="text-gray-600 text-lg">No profile data available</p>
+          )}
         </div>
       </div>
     </div>
