@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { productsApi, adminProductsApi } from "@/lib/api";
-import { Loader, ChevronLeft, Edit2, Trash2 } from "lucide-react";
+import { Loader, ChevronLeft, Edit2, Trash2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
 interface Variant {
