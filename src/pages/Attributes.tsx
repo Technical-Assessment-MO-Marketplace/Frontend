@@ -206,10 +206,6 @@ const Attributes = () => {
                   <h3 className="text-lg font-semibold text-gray-900">
                     {attribute.name}
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    ID: {attribute.id} • Values:{" "}
-                    {attributeValues[attribute.id]?.length || 0}
-                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   {expandedId === attribute.id ? (
