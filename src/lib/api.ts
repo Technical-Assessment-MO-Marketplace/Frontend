@@ -121,4 +121,15 @@ export const adminAttributesApi = {
     api.delete(`/admin/attributes/values/${valueId}`),
 };
 
+// Orders API
+export const ordersApi = {
+  create: (data: {
+    items: Array<{
+      product_id: number;
+      variant_id: number;
+      quantity: number;
+    }>;
+  }) => api.post("/orders", data),
+};
+
 export default api;

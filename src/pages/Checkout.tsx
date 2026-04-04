@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader, ChevronLeft, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
+import { ordersApi } from "@/lib/api";
 
 interface Variant {
   id: number;
@@ -18,6 +19,27 @@ interface Variant {
 interface CheckoutState {
   variant: Variant;
   productId: string;
+}
+
+interface OrderResponse {
+  statusCode: number;
+  message: string;
+  data: {
+    id: number;
+    user_id: number;
+    total_amount: number;
+    status: string;
+    created_at: string;
+    items: Array<{
+      id: number;
+      order_id: number;
+      product_id: number;
+      variant_id: number;
+      quantity: number;
+      price: number;
+      created_at: string;
+    }>;
+  };
 }
 
 const Checkout = () => {
@@ -74,17 +96,33 @@ const Checkout = () => {
 
     setProcessingPayment(true);
     try {
-      // Simulate order processing
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await ordersApi.create({
+        items: [
+          {
+            product_id: parseInt(productId || "0"),
+            variant_id: variant.id,
+            quantity: quantity,
+          },
+        ],
+      });
+
+      const orderData: OrderResponse = response.data;
 
       toast.success(
-        `Order placed successfully! Variant #${variant.id} will be delivered via COD`,
+        `Order #${orderData.data.id} placed successfully! Total: $${orderData.data.total_amount.toFixed(2)}`,
       );
 
-      // Navigate back to home after success
-      setTimeout(() => navigate("/home"), 1500);
+      // Store order details and navigate to confirmation
+      navigate("/home", {
+        state: {
+          orderId: orderData.data.id,
+          orderStatus: "confirmed",
+        },
+      });
     } catch (err: any) {
-      toast.error("Failed to place order");
+      const errorMessage =
+        err?.message || "Failed to place order. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setProcessingPayment(false);
     }
@@ -114,18 +152,34 @@ const Checkout = () => {
 
     setProcessingPayment(true);
     try {
-      // TODO: Integrate Stripe payment here
-      // For now, simulating a successful payment
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // TODO: Replace with actual Stripe Payment Intent creation
+      // For now, creating order with card payment intention
+      const response = await ordersApi.create({
+        items: [
+          {
+            product_id: parseInt(productId || "0"),
+            variant_id: variant.id,
+            quantity: quantity,
+          },
+        ],
+      });
+
+      const orderData: OrderResponse = response.data;
 
       toast.success(
-        `Payment successful! Order placed for variant #${variant.id}`,
+        `Order #${orderData.data.id} placed! Payment of $${orderData.data.total_amount.toFixed(2)} processing...`,
       );
 
-      // Navigate back to home after success
-      setTimeout(() => navigate("/home"), 1500);
+      // Store order details and navigate to confirmation
+      navigate("/home", {
+        state: {
+          orderId: orderData.data.id,
+          orderStatus: "processing",
+        },
+      });
     } catch (err: any) {
-      toast.error("Payment failed. Please try again.");
+      const errorMessage = err?.message || "Payment failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setProcessingPayment(false);
     }
