@@ -84,15 +84,15 @@ const Profile = () => {
 
           {profileData ? (
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-black">
-                Hello!
-              </h1>
+              <h1 className="text-4xl font-bold text-black">Hello!</h1>
               <p className="text-gray-600 text-lg">
                 Profile retrieved successfully
               </p>
 
               <div className="bg-gray-50 rounded-lg p-6 mt-8">
-                <p className="text-sm text-gray-600 font-medium mb-2">Email Address</p>
+                <p className="text-sm text-gray-600 font-medium mb-2">
+                  Email Address
+                </p>
                 <p className="text-2xl font-semibold text-gray-900 break-all">
                   {profileData.email}
                 </p>
