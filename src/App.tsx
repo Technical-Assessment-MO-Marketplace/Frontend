@@ -12,6 +12,7 @@ import Profile from "@/pages/Profile";
 import Products from "@/pages/Products";
 import ProductVariants from "@/pages/ProductVariants";
 import Attributes from "@/pages/Attributes";
+import Checkout from "@/pages/Checkout";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
               path="/products/:id/variants"
               element={<ProductVariants />}
             />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/attributes" element={<Attributes />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>

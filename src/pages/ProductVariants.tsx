@@ -121,10 +121,8 @@ const ProductVariants = () => {
       toast.error("This variant is out of stock");
       return;
     }
-    toast.success(
-      `Order placed for variant #${variant.id} (${variant.attributes}) at $${variant.price.toFixed(2)}`,
-    );
-    // You can add order API call here if needed
+    // Navigate to checkout page with variant data
+    navigate("/checkout", { state: { variant, productId: id } });
   };
 
   if (loading) {
