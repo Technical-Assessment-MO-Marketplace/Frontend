@@ -64,6 +64,15 @@ const Navbar = () => {
                 >
                   Attributes
                 </Button>
+
+                <Button
+                  onClick={() => navigate("/orders")}
+                  size="sm"
+                  variant="outline"
+                  className="text-xs"
+                >
+                  Orders
+                </Button>
               </>
             )}
 

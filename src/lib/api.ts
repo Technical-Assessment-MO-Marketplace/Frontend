@@ -130,6 +130,7 @@ export const ordersApi = {
       quantity: number;
     }>;
   }) => api.post("/orders", data),
+  getAll: () => api.get("/orders"),
 };
 
 export default api;
