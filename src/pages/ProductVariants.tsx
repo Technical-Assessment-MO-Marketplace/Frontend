@@ -120,8 +120,7 @@ const ProductVariants = () => {
 
   const handleOrderVariant = (variant: Variant) => {
     if (!isAuthenticated) {
-      toast.error("You have to logged in to the system");
-      navigate("/login");
+      toast.error("First logged in to the system. Cannot go order page");
       return;
     }
     if (variant.stock <= 0) {
@@ -232,11 +231,9 @@ const ProductVariants = () => {
               <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                 Status
               </th>
-              {isAuthenticated && (
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
-                  Order
-                </th>
-              )}
+              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                Order
+              </th>
               <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                 Actions
               </th>
@@ -279,19 +276,17 @@ const ProductVariants = () => {
                     </span>
                   )}
                 </td>
-                {isAuthenticated && (
-                  <td className="px-6 py-4 text-center">
-                    <Button
-                      onClick={() => handleOrderVariant(variant)}
-                      disabled={variant.stock <= 0}
-                      size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-1"
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      Order
-                    </Button>
-                  </td>
-                )}
+                <td className="px-6 py-4 text-center">
+                  <Button
+                    onClick={() => handleOrderVariant(variant)}
+                    disabled={variant.stock <= 0}
+                    size="sm"
+                    className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-1"
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Order
+                  </Button>
+                </td>
                 <td className="px-6 py-4 text-center">
                   <div className="flex gap-2 justify-center">
                     {isAdmin && (
