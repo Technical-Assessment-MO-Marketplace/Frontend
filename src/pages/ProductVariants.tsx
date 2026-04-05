@@ -149,8 +149,27 @@ const ProductVariants = () => {
       toast.error("This variant is out of stock");
       return;
     }
+    // Validate variant has required properties
+    if (!variant.id || variant.price === undefined) {
+      toast.error("Invalid variant data. Please refresh and try again.");
+      console.error("Variant missing required properties:", variant);
+      return;
+    }
     // Navigate to checkout page with variant data
     navigate("/checkout", { state: { variant, productId: id } });
+  };
+
+  const normalizeVariant = (variant: any): Variant => {
+    // Ensure variant has all required properties
+    return {
+      id: variant.id || variant.variant_id,
+      product_id: variant.product_id || parseInt(id || "0"),
+      attributes: variant.attributes || [],
+      price: Number(variant.price) || 0,
+      stock: Number(variant.stock) || 0,
+      created_at: variant.created_at,
+      ...variant,
+    };
   };
 
   const handleFilterVariants = async () => {
@@ -174,16 +193,20 @@ const ProductVariants = () => {
       );
       const filteredVariants =
         response.data.variants || response.data.data || [];
-      setVariants(filteredVariants);
 
-      if (filteredVariants.length === 0) {
+      // Normalize filtered variants to ensure they have required properties
+      const normalizedVariants = filteredVariants.map(normalizeVariant);
+      setVariants(normalizedVariants);
+
+      if (normalizedVariants.length === 0) {
         toast.info("No variants found with selected attributes");
       } else {
-        toast.success(`Found ${filteredVariants.length} variant(s)`);
+        toast.success(`Found ${normalizedVariants.length} variant(s)`);
       }
     } catch (err: any) {
       const errorMessage = err.message || "Failed to filter variants";
       toast.error(errorMessage);
+      console.error("Filter error:", err);
     } finally {
       setFilterLoading(false);
     }

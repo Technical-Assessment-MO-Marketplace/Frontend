@@ -35,7 +35,21 @@ const Checkout = () => {
       navigate("/products");
       return;
     }
-    setVariant(state.variant);
+
+    // Validate variant has required properties
+    const variantData = state.variant;
+    if (
+      !variantData.id ||
+      variantData.price === undefined ||
+      variantData.price === null
+    ) {
+      toast.error("Invalid variant data. Missing price or ID.");
+      console.error("Invalid variant data:", variantData);
+      navigate("/products");
+      return;
+    }
+
+    setVariant(variantData);
     setProductId(state.productId);
   }, [location, navigate]);
 
@@ -43,7 +57,26 @@ const Checkout = () => {
     return <LoadingSpinner message="Loading checkout..." variant="default" />;
   }
 
-  const totalPrice = variant.price * quantity;
+  // Safety check: ensure price is a valid number
+  const price = Number(variant.price) || 0;
+  if (price < 0) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-12">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700">
+          <h2 className="text-lg font-semibold mb-2">Invalid Variant</h2>
+          <p>This variant has invalid pricing information.</p>
+          <Button
+            onClick={() => navigate("/products")}
+            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
+          >
+            Back to Products
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const totalPrice = price * quantity;
 
   const handleCODOrder = async () => {
     if (!cardName.trim() || !cardEmail.trim() || !cardPhone.trim()) {
