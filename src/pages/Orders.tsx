@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ordersApi } from "@/lib/api";
@@ -173,187 +173,191 @@ const Orders = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
         {filteredOrders.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No orders found</p>
           </div>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Order ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Customer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Total Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Items
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order) => (
-                <tbody key={order.id}>
-                  <tr className="border-b hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-semibold text-blue-600">
-                      #{order.id}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900">
-                      {order.user.name}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {order.user.email}
-                    </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                      ${order.total_amount.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
-                      >
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {formatDate(order.created_at)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {order.items.length} item
-                      {order.items.length !== 1 ? "s" : ""}
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      <button
-                        onClick={() =>
-                          setExpandedOrderId(
-                            expandedOrderId === order.id ? null : order.id,
-                          )
-                        }
-                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        <Eye className="w-4 h-4" />
-                        {expandedOrderId === order.id ? "Hide" : "View"}
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform ${expandedOrderId === order.id ? "rotate-180" : ""}`}
-                        />
-                      </button>
-                    </td>
-                  </tr>
-
-                  {/* Expanded Order Details */}
-                  {expandedOrderId === order.id && (
-                    <tr className="bg-blue-50 border-b">
-                      <td colSpan={8} className="px-6 py-6">
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div>
-                              <p className="text-xs font-semibold text-gray-600 uppercase mb-1">
-                                Order ID
-                              </p>
-                              <p className="text-sm text-gray-900">
-                                #{order.id}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-xs font-semibold text-gray-600 uppercase mb-1">
-                                Status
-                              </p>
-                              <p className="text-sm">
-                                <span
-                                  className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
-                                >
-                                  {order.status}
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                              Order Items
-                            </h4>
-                            <div className="space-y-3 bg-white rounded-lg p-4 border border-gray-200">
-                              {order.items.map((item, index) => (
-                                <div
-                                  key={item.id}
-                                  className="pb-3 border-b last:border-b-0 last:pb-0"
-                                >
-                                  <div className="flex justify-between items-start mb-2">
-                                    <div>
-                                      <p className="text-sm font-semibold text-gray-900">
-                                        {index + 1}. {item.product.name}
-                                      </p>
-                                      <p className="text-xs text-gray-600">
-                                        {item.product.description}
-                                      </p>
-                                    </div>
-                                    <p className="text-sm font-semibold text-gray-900">
-                                      ${(item.price * item.quantity).toFixed(2)}
-                                    </p>
-                                  </div>
-                                  <div className="grid grid-cols-4 gap-4 text-xs text-gray-600">
-                                    <div>
-                                      <p className="font-medium text-gray-700">
-                                        Variant
-                                      </p>
-                                      <p>{item.variant.combination_key}</p>
-                                    </div>
-                                    <div>
-                                      <p className="font-medium text-gray-700">
-                                        Quantity
-                                      </p>
-                                      <p>{item.quantity}</p>
-                                    </div>
-                                    <div>
-                                      <p className="font-medium text-gray-700">
-                                        Unit Price
-                                      </p>
-                                      <p>${item.price.toFixed(2)}</p>
-                                    </div>
-                                    <div>
-                                      <p className="font-medium text-gray-700">
-                                        Stock
-                                      </p>
-                                      <p>{item.variant.stock}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="bg-white rounded-lg p-4 border border-gray-200 flex justify-between items-center">
-                            <p className="text-sm font-semibold text-gray-900">
-                              Total Amount
-                            </p>
-                            <p className="text-lg font-bold text-blue-600">
-                              ${order.total_amount.toFixed(2)}
-                            </p>
-                          </div>
-                        </div>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-20">
+                    Order ID
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-32">
+                    Customer
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-40">
+                    Email
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-28">
+                    Total Amount
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-24">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-40">
+                    Date
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-20">
+                    Items
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase w-28">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredOrders.map((order) => (
+                  <React.Fragment key={order.id}>
+                    <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-4 text-sm font-semibold text-blue-600 w-20">
+                        #{order.id}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900 w-32 truncate">
+                        {order.user.name}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-600 w-40 truncate">
+                        {order.user.email}
+                      </td>
+                      <td className="px-4 py-4 text-sm font-semibold text-gray-900 w-28">
+                        ${order.total_amount.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-4 text-sm w-24">
+                        <span
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
+                        >
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-600 w-40">
+                        {formatDate(order.created_at)}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-600 w-20 text-center">
+                        {order.items.length}
+                      </td>
+                      <td className="px-4 py-4 text-sm w-28">
+                        <button
+                          onClick={() =>
+                            setExpandedOrderId(
+                              expandedOrderId === order.id ? null : order.id,
+                            )
+                          }
+                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
+                        >
+                          <Eye className="w-4 h-4" />
+                          {expandedOrderId === order.id ? "Hide" : "View"}
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${expandedOrderId === order.id ? "rotate-180" : ""}`}
+                          />
+                        </button>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              ))}
-            </tbody>
-          </table>
+
+                    {/* Expanded Order Details */}
+                    {expandedOrderId === order.id && (
+                      <tr className="bg-blue-50 border-b border-gray-200">
+                        <td colSpan={8} className="px-4 py-6">
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                              <div>
+                                <p className="text-xs font-semibold text-gray-600 uppercase mb-1">
+                                  Order ID
+                                </p>
+                                <p className="text-sm text-gray-900">
+                                  #{order.id}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-semibold text-gray-600 uppercase mb-1">
+                                  Status
+                                </p>
+                                <p className="text-sm">
+                                  <span
+                                    className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
+                                  >
+                                    {order.status}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+
+                            <div>
+                              <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                                Order Items
+                              </h4>
+                              <div className="space-y-3 bg-white rounded-lg p-4 border border-gray-200">
+                                {order.items.map((item, index) => (
+                                  <div
+                                    key={item.id}
+                                    className="pb-3 border-b last:border-b-0 last:pb-0"
+                                  >
+                                    <div className="flex justify-between items-start mb-2">
+                                      <div>
+                                        <p className="text-sm font-semibold text-gray-900">
+                                          {index + 1}. {item.product.name}
+                                        </p>
+                                        <p className="text-xs text-gray-600">
+                                          {item.product.description}
+                                        </p>
+                                      </div>
+                                      <p className="text-sm font-semibold text-gray-900">
+                                        $
+                                        {(item.price * item.quantity).toFixed(
+                                          2,
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div className="grid grid-cols-4 gap-4 text-xs text-gray-600">
+                                      <div>
+                                        <p className="font-medium text-gray-700">
+                                          Variant
+                                        </p>
+                                        <p>{item.variant.combination_key}</p>
+                                      </div>
+                                      <div>
+                                        <p className="font-medium text-gray-700">
+                                          Quantity
+                                        </p>
+                                        <p>{item.quantity}</p>
+                                      </div>
+                                      <div>
+                                        <p className="font-medium text-gray-700">
+                                          Unit Price
+                                        </p>
+                                        <p>${item.price.toFixed(2)}</p>
+                                      </div>
+                                      <div>
+                                        <p className="font-medium text-gray-700">
+                                          Stock
+                                        </p>
+                                        <p>{item.variant.stock}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="bg-white rounded-lg p-4 border border-gray-200 flex justify-between items-center">
+                              <p className="text-sm font-semibold text-gray-900">
+                                Total Amount
+                              </p>
+                              <p className="text-lg font-bold text-blue-600">
+                                ${order.total_amount.toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
