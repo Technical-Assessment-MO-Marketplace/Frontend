@@ -140,17 +140,19 @@ const Attributes = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="mb-8 flex justify-between items-center">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 py-6 sm:py-8 md:py-12">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Attributes</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Attributes
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-600 mt-2">
             Manage product attributes like Color, Size, Brand, etc.
           </p>
         </div>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-2"
+          className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-2 w-full sm:w-auto justify-center text-xs sm:text-sm"
         >
           <Plus className="w-4 h-4" />
           Create Attribute
@@ -159,11 +161,11 @@ const Attributes = () => {
 
       {/* Attributes Grid */}
       {attributes.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 sm:p-12 text-center">
+          <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-2">
             No Attributes
           </h2>
-          <p className="text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600">
             Create your first attribute to get started.
           </p>
         </div>
@@ -176,19 +178,19 @@ const Attributes = () => {
             >
               {/* Header */}
               <div
-                className="p-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 cursor-pointer"
+                className="p-3 sm:p-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 cursor-pointer"
                 onClick={() => toggleExpand(attribute)}
               >
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                     {attribute.name}
                   </h3>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ml-3 flex-shrink-0">
                   {expandedId === attribute.id ? (
-                    <ChevronUp className="w-5 h-5 text-gray-600" />
+                    <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-600" />
+                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                   )}
                   <Button
                     onClick={(e) => {
@@ -197,38 +199,38 @@ const Attributes = () => {
                     }}
                     disabled={deletingId === attribute.id}
                     size="sm"
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    className="bg-red-600 hover:bg-red-700 text-white text-xs"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Button>
                 </div>
               </div>
 
               {/* Expanded Content */}
               {expandedId === attribute.id && (
-                <div className="p-4 border-t border-gray-200">
+                <div className="p-3 sm:p-4 border-t border-gray-200">
                   <div className="mb-4">
                     <Button
                       onClick={() => {
                         setSelectedAttribute(attribute);
                         setIsValueModalOpen(true);
                       }}
-                      className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-2 mb-4"
+                      className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-2 mb-4 w-full sm:w-auto justify-center text-xs sm:text-sm"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                       Add Value
                     </Button>
                   </div>
 
                   {loadingValuesId === attribute.id ? (
                     <div className="text-center py-4">
-                      <Loader className="w-5 h-5 animate-spin mx-auto" />
-                      <p className="text-gray-600 text-sm mt-2">
+                      <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin mx-auto" />
+                      <p className="text-gray-600 text-xs sm:text-sm mt-2">
                         Loading values...
                       </p>
                     </div>
                   ) : (attributeValues[attribute.id] || []).length === 0 ? (
-                    <div className="bg-gray-50 rounded p-4 text-center text-gray-600 text-sm">
+                    <div className="bg-gray-50 rounded p-3 sm:p-4 text-center text-gray-600 text-xs sm:text-sm">
                       No values added yet. Click "Add Value" to create one.
                     </div>
                   ) : (
@@ -236,9 +238,9 @@ const Attributes = () => {
                       {(attributeValues[attribute.id] || []).map((value) => (
                         <div
                           key={value.id}
-                          className="flex justify-between items-center bg-gray-50 p-3 rounded border border-gray-200"
+                          className="flex justify-between items-center bg-gray-50 p-2 sm:p-3 rounded border border-gray-200 gap-2"
                         >
-                          <span className="text-gray-900 font-medium">
+                          <span className="text-gray-900 font-medium text-xs sm:text-sm truncate">
                             {value.value}
                           </span>
                           <Button
@@ -247,9 +249,9 @@ const Attributes = () => {
                             }
                             disabled={deletingValueId === value.id}
                             size="sm"
-                            className="bg-red-600 hover:bg-red-700 text-white"
+                            className="bg-red-600 hover:bg-red-700 text-white text-xs flex-shrink-0"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
                       ))}
@@ -263,7 +265,7 @@ const Attributes = () => {
       )}
 
       {/* Summary */}
-      <div className="mt-6 text-sm text-gray-600">
+      <div className="mt-6 text-xs sm:text-sm text-gray-600">
         Showing <span className="font-semibold">{attributes.length}</span>{" "}
         attribute{attributes.length !== 1 ? "s" : ""}
       </div>

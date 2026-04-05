@@ -119,16 +119,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-3 sm:p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">MO Marketplace</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+        <CardHeader className="text-center pb-3 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">MO Marketplace</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
+            Sign in to your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-xs sm:text-sm">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -136,18 +140,20 @@ const Login = () => {
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
                 placeholder="you@example.com"
-                className={
+                className={`text-xs sm:text-sm ${
                   errors.email ? "border-red-500 focus:border-red-500" : ""
-                }
+                }`}
               />
               {errors.email && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
+                <p className="text-xs text-red-500 flex items-center gap-1">
                   <span className="text-red-500">•</span> {errors.email}
                 </p>
               )}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-xs sm:text-sm">
+                Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -156,9 +162,9 @@ const Login = () => {
                   onChange={handlePasswordChange}
                   onBlur={handlePasswordBlur}
                   placeholder="••••••••"
-                  className={
+                  className={`text-xs sm:text-sm ${
                     errors.password ? "border-red-500 focus:border-red-500" : ""
-                  }
+                  }`}
                 />
                 <button
                   type="button"
@@ -166,27 +172,27 @@ const Login = () => {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                   )}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
+                <p className="text-xs text-red-500 flex items-center gap-1">
                   <span className="text-red-500">•</span> {errors.password}
                 </p>
               )}
             </div>
             <Button
               type="submit"
-              className="w-full"
+              className="w-full text-xs sm:text-sm"
               disabled={loading || Object.values(errors).some((e) => e)}
             >
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
+          <p className="text-center text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
             Don't have an account?{" "}
             <Link to="/register" className="text-primary underline">
               Register

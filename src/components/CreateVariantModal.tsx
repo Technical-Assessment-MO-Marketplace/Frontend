@@ -120,32 +120,36 @@ const CreateVariantModal = ({
   if (!isOpen || !productId) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Create Variant</h2>
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
+              Create Variant
+            </h2>
             {productName && (
-              <p className="text-sm text-gray-600 mt-1">For: {productName}</p>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                For: {productName}
+              </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 flex-shrink-0"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded text-xs sm:text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Price *
             </label>
             <input
@@ -153,44 +157,44 @@ const CreateVariantModal = ({
               step="0.01"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
               placeholder="e.g., 999.99"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
               Stock Quantity *
             </label>
             <input
               type="number"
               value={stock}
               onChange={(e) => setStock(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
               placeholder="e.g., 50"
               required
             />
           </div>
 
           {/* Attributes Section */}
-          <div className="border-t pt-4 mt-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">
+          <div className="border-t pt-3 sm:pt-4 mt-3 sm:mt-4">
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-3">
               Attributes (Optional)
             </h3>
             {loadingAttributes ? (
-              <div className="text-center py-4 text-gray-500 text-sm">
+              <div className="text-center py-4 text-gray-500 text-xs sm:text-sm">
                 Loading attributes...
               </div>
             ) : attributes.length === 0 ? (
-              <div className="text-center py-4 text-gray-500 text-sm bg-gray-50 rounded p-2">
+              <div className="text-center py-4 text-gray-500 text-xs sm:text-sm bg-gray-50 rounded p-2">
                 No attributes available. Create attributes first.
               </div>
             ) : (
               <div className="space-y-3">
                 {attributes.map((attribute) => (
                   <div key={attribute.id}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       {attribute.name}
                     </label>
                     <select
@@ -201,7 +205,7 @@ const CreateVariantModal = ({
                           parseInt(e.target.value),
                         )
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
                     >
                       <option value={0}>Select {attribute.name}</option>
                       {(attribute.values || []).map((value) => (
@@ -216,11 +220,11 @@ const CreateVariantModal = ({
             )}
           </div>
 
-          <div className="flex gap-2 pt-4 border-t">
+          <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
             <Button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm py-2"
             >
               {loading ? "Creating..." : "Create Variant"}
             </Button>
@@ -228,7 +232,7 @@ const CreateVariantModal = ({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900"
+              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 text-xs sm:text-sm py-2"
             >
               Cancel
             </Button>

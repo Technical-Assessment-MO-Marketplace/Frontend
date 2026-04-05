@@ -57,16 +57,20 @@ const Products = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="mb-8 flex justify-between items-center">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 py-6 sm:py-8 md:py-12">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-          <p className="text-gray-600 mt-2">Browse all available products</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Products
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
+            Browse all available products
+          </p>
         </div>
         {isAdmin && (
           <Button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-2 w-full sm:w-auto justify-center"
           >
             <Plus className="w-4 h-4" />
             Create Product
@@ -75,18 +79,18 @@ const Products = () => {
       </div>
 
       {products.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 sm:p-8 md:p-12 text-center">
+          <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-2">
             No Products
           </h2>
-          <p className="text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600">
             There are no products available at the moment.
           </p>
         </div>
       ) : (
         <>
-          {/* Table */}
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block bg-white rounded-lg shadow overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-100 border-b border-gray-200">
                 <tr>
@@ -131,7 +135,7 @@ const Products = () => {
                         }
                         size="sm"
                         variant="outline"
-                        className="inline-flex items-center gap-1"
+                        className="inline-flex items-center gap-1 text-xs"
                       >
                         Variants
                         <ChevronRight className="w-4 h-4" />
@@ -139,7 +143,7 @@ const Products = () => {
                     </td>
                     {isAdmin && (
                       <td className="px-6 py-4 text-center">
-                        <div className="flex gap-2 justify-center">
+                        <div className="flex gap-2 justify-center flex-wrap">
                           <Button
                             onClick={() => {
                               setSelectedProduct(product);
@@ -179,8 +183,82 @@ const Products = () => {
             </table>
           </div>
 
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-4">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white rounded-lg shadow p-4 border border-gray-200"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500">
+                      Product #{product.id}
+                    </p>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {product.name}
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                  {product.description || "No description available"}
+                </p>
+
+                <div className="space-y-2">
+                  <Button
+                    onClick={() => navigate(`/products/${product.id}/variants`)}
+                    variant="outline"
+                    className="w-full text-sm flex items-center justify-between"
+                  >
+                    Variants
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+
+                  {isAdmin && (
+                    <div className="grid grid-cols-3 gap-2">
+                      <Button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setIsVariantModalOpen(true);
+                        }}
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white text-xs"
+                        title="Add Variant"
+                      >
+                        <Package className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setIsEditModalOpen(true);
+                        }}
+                        size="sm"
+                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                        title="Edit"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setIsDeleteModalOpen(true);
+                        }}
+                        size="sm"
+                        className="bg-red-600 hover:bg-red-700 text-white text-xs"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Summary */}
-          <div className="mt-6 text-sm text-gray-600">
+          <div className="mt-6 text-xs sm:text-sm text-gray-600">
             Showing <span className="font-semibold">{products.length}</span>{" "}
             product
             {products.length !== 1 ? "s" : ""}

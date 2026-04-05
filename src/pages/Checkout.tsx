@@ -183,35 +183,35 @@ const Checkout = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 py-6 sm:py-8 md:py-12">
       <Button
         onClick={() => navigate(-1)}
         variant="outline"
-        className="mb-6 flex items-center gap-2"
+        className="mb-6 flex items-center gap-2 text-xs sm:text-sm"
       >
         <ChevronLeft className="w-4 h-4" />
         Back
       </Button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {/* Order Summary */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow p-6 sticky top-20">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+        <div className="lg:col-span-1 order-2 lg:order-1">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 lg:sticky lg:top-20">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
               Order Summary
             </h2>
 
             {/* Product Details */}
-            <div className="mb-6 pb-6 border-b border-gray-200">
-              <div className="flex justify-between mb-3">
+            <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-gray-200">
+              <div className="flex justify-between mb-2 sm:mb-3 text-xs sm:text-sm">
                 <span className="text-gray-600">Variant ID</span>
                 <span className="font-semibold text-gray-900">
                   #{variant.id}
                 </span>
               </div>
-              <div className="flex justify-between mb-3">
+              <div className="flex justify-between mb-2 sm:mb-3 text-xs sm:text-sm">
                 <span className="text-gray-600">Attributes</span>
-                <span className="font-semibold text-gray-900 text-right max-w-xs">
+                <span className="font-semibold text-gray-900 text-right max-w-xs text-xs">
                   {(() => {
                     if (
                       Array.isArray(variant.attributes) &&
@@ -233,63 +233,61 @@ const Checkout = () => {
                   })()}
                 </span>
               </div>
-              <div className="flex justify-between mb-3">
+              <div className="flex justify-between mb-2 sm:mb-3 text-xs sm:text-sm">
                 <span className="text-gray-600">Unit Price</span>
                 <span className="font-semibold text-green-600">
                   ${variant.price.toFixed(2)}
                 </span>
               </div>
-              <div className="flex justify-between bg-blue-50 p-3 rounded-lg">
+              <div className="flex justify-between bg-blue-50 p-2 sm:p-3 rounded-lg text-xs sm:text-sm">
                 <span className="text-gray-600 font-medium">Quantity</span>
-                <span className="font-bold text-blue-600 text-lg">
+                <span className="font-bold text-blue-600 text-base sm:text-lg">
                   {quantity}
                 </span>
               </div>
             </div>
 
             {/* Price Breakdown */}
-            <div className="mb-6 pb-6 border-b border-gray-200 space-y-2">
-              <div className="flex justify-between text-sm">
+            <div className="mb-4 sm:mb-6 pb-4 sm:pb-6 border-b border-gray-200 space-y-2">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-600">
                   Subtotal ({quantity} × ${variant.price.toFixed(2)})
                 </span>
-                <span className="text-gray-900">
+                <span className="text-gray-900 font-medium">
                   ${(variant.price * quantity).toFixed(2)}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-600">Shipping</span>
-                <span className="text-gray-900">Free</span>
+                <span className="text-gray-900 font-medium">Free</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-600">Tax (0%)</span>
-                <span className="text-gray-900">$0.00</span>
+                <span className="text-gray-900 font-medium">$0.00</span>
               </div>
             </div>
 
             {/* Total - Highlighted */}
-            <div className="flex justify-between items-center mb-6 bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border-2 border-green-200">
-              <span className="text-lg font-bold text-gray-900">
+            <div className="flex justify-between items-center mb-4 sm:mb-6 bg-gradient-to-r from-green-50 to-green-100 p-3 sm:p-4 rounded-lg border-2 border-green-200">
+              <span className="text-base sm:text-lg font-bold text-gray-900">
                 Order Total
               </span>
-              <span className="text-3xl font-bold text-green-600">
+              <span className="text-2xl sm:text-3xl font-bold text-green-600">
                 ${totalPrice.toFixed(2)}
               </span>
             </div>
 
             {/* Stock Info */}
             {variant.stock === 0 ? (
-              <div className="bg-red-50 border border-red-300 rounded-lg p-3">
-                <p className="text-sm text-red-900 font-semibold">
-                  ✕ Out of Stock
-                </p>
-                <p className="text-xs text-red-700 mt-1">
+              <div className="bg-red-50 border border-red-300 rounded-lg p-3 text-xs sm:text-sm">
+                <p className="text-red-900 font-semibold">✕ Out of Stock</p>
+                <p className="text-red-700 mt-1">
                   This item is currently unavailable
                 </p>
               </div>
             ) : (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-sm text-blue-900">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs sm:text-sm">
+                <p className="text-blue-900">
                   <span className="font-semibold">✓ In Stock:</span>{" "}
                   {variant.stock} items available
                 </p>
@@ -299,11 +297,11 @@ const Checkout = () => {
         </div>
 
         {/* Checkout Form */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 order-1 lg:order-2">
           {variant.stock === 0 && (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 sm:p-4 mb-6 rounded text-xs sm:text-sm">
               <p className="font-semibold">Out of Stock</p>
-              <p className="text-sm">
+              <p className="text-xs">
                 This item is currently unavailable. Please check back later.
               </p>
             </div>
@@ -311,15 +309,15 @@ const Checkout = () => {
 
           {/* Shipping Information */}
           <div
-            className={`bg-white rounded-lg shadow p-6 mb-6 ${variant.stock === 0 ? "opacity-50 pointer-events-none" : ""}`}
+            className={`bg-white rounded-lg shadow p-4 sm:p-6 mb-6 ${variant.stock === 0 ? "opacity-50 pointer-events-none" : ""}`}
           >
-            <h3 className="text-lg font-bold text-gray-900 mb-4">
+            <h3 className="text-lg sm:text-lg font-bold text-gray-900 mb-4">
               Shipping Information
             </h3>
 
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                   Full Name *
                 </label>
                 <Input
@@ -327,12 +325,13 @@ const Checkout = () => {
                   value={cardName}
                   onChange={(e) => setCardName(e.target.value)}
                   placeholder="John Doe"
+                  className="text-xs sm:text-sm"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                     Email *
                   </label>
                   <Input
@@ -340,10 +339,11 @@ const Checkout = () => {
                     value={cardEmail}
                     onChange={(e) => setCardEmail(e.target.value)}
                     placeholder="john@example.com"
+                    className="text-xs sm:text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                     Phone *
                   </label>
                   <Input
@@ -351,12 +351,13 @@ const Checkout = () => {
                     value={cardPhone}
                     onChange={(e) => setCardPhone(e.target.value)}
                     placeholder="+1 234 567 8900"
+                    className="text-xs sm:text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                   Quantity * (Stock: {variant.stock})
                 </label>
                 <div className="flex items-center gap-2">
@@ -365,7 +366,7 @@ const Checkout = () => {
                       handleQuantityChange((quantity - 1).toString())
                     }
                     disabled={quantity <= 1}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-3"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-2 sm:px-3"
                     size="sm"
                   >
                     −
@@ -376,14 +377,14 @@ const Checkout = () => {
                     max={variant.stock}
                     value={quantity}
                     onChange={(e) => handleQuantityChange(e.target.value)}
-                    className="text-center text-lg font-semibold"
+                    className="text-center text-base sm:text-lg font-semibold"
                   />
                   <Button
                     onClick={() =>
                       handleQuantityChange((quantity + 1).toString())
                     }
                     disabled={quantity >= variant.stock}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-3"
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 px-2 sm:px-3"
                     size="sm"
                   >
                     +
@@ -395,7 +396,7 @@ const Checkout = () => {
 
           {/* Payment Method Selection */}
           <div
-            className={`bg-white rounded-lg shadow p-6 mb-6 ${variant.stock === 0 ? "opacity-50 pointer-events-none" : ""}`}
+            className={`bg-white rounded-lg shadow p-4 sm:p-6 mb-6 ${variant.stock === 0 ? "opacity-50 pointer-events-none" : ""}`}
           >
             <h3 className="text-lg font-bold text-gray-900 mb-4">
               Payment Method
@@ -404,7 +405,7 @@ const Checkout = () => {
             <div className="space-y-3 mb-6">
               {/* Cash on Delivery */}
               <label
-                className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                className="border border-gray-200 rounded-lg p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => setPaymentMethod("cod")}
               >
                 <div className="flex items-start gap-3">
@@ -416,14 +417,14 @@ const Checkout = () => {
                     onChange={() => setPaymentMethod("cod")}
                     className="mt-1"
                   />
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <Truck className="w-5 h-5 text-gray-600" />
-                      <p className="font-semibold text-gray-900">
+                      <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                      <p className="font-semibold text-gray-900 text-xs sm:text-base">
                         Cash on Delivery
                       </p>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600 mt-1">
                       Pay when your order arrives
                     </p>
                   </div>
@@ -432,7 +433,7 @@ const Checkout = () => {
 
               {/* Debit Card */}
               <label
-                className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                className="border border-gray-200 rounded-lg p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => setPaymentMethod("card")}
               >
                 <div className="flex items-start gap-3">
@@ -444,14 +445,14 @@ const Checkout = () => {
                     onChange={() => setPaymentMethod("card")}
                     className="mt-1"
                   />
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <CreditCard className="w-5 h-5 text-gray-600" />
-                      <p className="font-semibold text-gray-900">
+                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                      <p className="font-semibold text-gray-900 text-xs sm:text-base">
                         Debit/Credit Card
                       </p>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600 mt-1">
                       Secure payment via Stripe
                     </p>
                   </div>
@@ -463,7 +464,7 @@ const Checkout = () => {
             {paymentMethod === "card" && (
               <div className="space-y-4 pt-4 border-t border-gray-200">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                     Card Number *
                   </label>
                   <Input
@@ -472,12 +473,13 @@ const Checkout = () => {
                     onChange={(e) => setCardNumber(e.target.value.slice(0, 19))}
                     placeholder="1234 5678 9012 3456"
                     maxLength={19}
+                    className="text-xs sm:text-sm"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                       Expiry Date (MM/YY) *
                     </label>
                     <Input
@@ -488,10 +490,11 @@ const Checkout = () => {
                       }
                       placeholder="12/25"
                       maxLength={5}
+                      className="text-xs sm:text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                       CVC *
                     </label>
                     <Input
@@ -500,6 +503,7 @@ const Checkout = () => {
                       onChange={(e) => setCardCVC(e.target.value.slice(0, 4))}
                       placeholder="123"
                       maxLength={4}
+                      className="text-xs sm:text-sm"
                     />
                   </div>
                 </div>
@@ -511,7 +515,7 @@ const Checkout = () => {
           {variant.stock === 0 ? (
             <Button
               disabled={true}
-              className="w-full bg-gray-400 cursor-not-allowed text-white py-3 text-lg font-semibold"
+              className="w-full bg-gray-400 cursor-not-allowed text-white py-2 sm:py-3 text-base sm:text-lg font-semibold"
             >
               Out of Stock
             </Button>
@@ -529,11 +533,11 @@ const Checkout = () => {
                 }
               }}
               disabled={!paymentMethod || processingPayment}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 sm:py-3 text-base sm:text-lg font-semibold"
             >
               {processingPayment ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader className="w-5 h-5 animate-spin" />
+                <span className="flex items-center justify-center gap-2 text-xs sm:text-base">
+                  <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                   Processing...
                 </span>
               ) : (
@@ -543,7 +547,7 @@ const Checkout = () => {
           )}
 
           {/* Security Info */}
-          <p className="text-center text-sm text-gray-600 mt-4">
+          <p className="text-center text-xs sm:text-sm text-gray-600 mt-4">
             🔒 Your payment information is secure and encrypted
           </p>
         </div>

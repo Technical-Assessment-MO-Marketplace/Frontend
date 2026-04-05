@@ -292,19 +292,21 @@ const ProductVariants = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 py-6 sm:py-8 md:py-12">
       <Button
         onClick={() => navigate("/products")}
         variant="outline"
-        className="mb-6 flex items-center gap-2"
+        className="mb-6 flex items-center gap-2 text-xs sm:text-sm"
       >
         <ChevronLeft className="w-4 h-4" />
         Back to Products
       </Button>
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Product Variants</h1>
-        <p className="text-gray-600 mt-2">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          Product Variants
+        </h1>
+        <p className="text-xs sm:text-sm text-gray-600 mt-2">
           Available variants for{" "}
           <span className="font-semibold">Product #{id}</span>
         </p>
@@ -312,22 +314,22 @@ const ProductVariants = () => {
 
       {/* Filter Section */}
       {attributes.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             Filter Variants by Attributes
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
             {attributes.map((attribute) => (
               <div key={attribute.attribute_id}>
-                <label className="block text-sm font-bold text-gray-800 mb-3">
+                <label className="block text-xs sm:text-sm font-bold text-gray-800 mb-2 sm:mb-3">
                   Select {attribute.attribute_name}:
                 </label>
-                <div className="space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                <div className="space-y-2 bg-gray-50 p-2 sm:p-3 rounded-lg border border-gray-200">
                   {attribute.values && attribute.values.length > 0 ? (
                     attribute.values.map((value) => (
                       <label
                         key={value.id}
-                        className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded transition"
+                        className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded transition text-sm"
                       >
                         <input
                           type="radio"
@@ -344,13 +346,15 @@ const ProductVariants = () => {
                           }
                           className="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500"
                         />
-                        <span className="text-sm text-gray-700">
+                        <span className="text-xs sm:text-sm text-gray-700">
                           {value.value}
                         </span>
                       </label>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500">No values available</p>
+                    <p className="text-xs sm:text-sm text-gray-500">
+                      No values available
+                    </p>
                   )}
                 </div>
                 {selectedAttributeValues[attribute.attribute_id] && (
@@ -386,10 +390,10 @@ const ProductVariants = () => {
               </div>
             ))}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button
               onClick={handleFilterVariants}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm"
               disabled={filterLoading}
             >
               {filterLoading ? "Filtering..." : "Search"}
@@ -398,7 +402,7 @@ const ProductVariants = () => {
               <Button
                 onClick={handleClearFilters}
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center justify-center gap-2 text-xs sm:text-sm"
               >
                 <X className="w-4 h-4" />
                 Clear Filters
@@ -408,31 +412,31 @@ const ProductVariants = () => {
         </div>
       )}
 
-      {/* Variants Table */}
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
-        <table className="w-full">
+      {/* Desktop Variants Table */}
+      <div className="hidden md:block bg-white rounded-lg shadow overflow-x-auto">
+        <table className="w-full text-sm">
           <thead className="bg-gray-100 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900">
                 Variant ID
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900">
                 Attributes
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900">
                 Price
               </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900">
                 Stock
               </th>
-              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-900">
                 Status
               </th>
-              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+              <th className="px-6 py-4 text-center text-xs font-semibold text-gray-900">
                 Order
               </th>
               {isAdmin && (
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                <th className="px-6 py-4 text-center text-xs font-semibold text-gray-900">
                   Actions
                 </th>
               )}
@@ -444,17 +448,16 @@ const ProductVariants = () => {
                 key={variant.id}
                 className="hover:bg-gray-50 transition-colors"
               >
-                <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                <td className="px-6 py-4 text-xs font-medium text-gray-900">
                   #{variant.id}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
+                <td className="px-6 py-4 text-xs text-gray-900">
                   {variant.attributes &&
                   Array.isArray(variant.attributes) &&
                   variant.attributes.length > 0 ? (
                     <div className="space-y-1">
                       {variant.attributes.map(
                         (attr: VariantAttribute | any, idx: number) => {
-                          // Safely access attribute properties
                           const attrName =
                             typeof attr === "object"
                               ? attr.attribute_name
@@ -483,10 +486,10 @@ const ProductVariants = () => {
                     <span className="text-gray-500">No attributes</span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-sm font-semibold text-green-600">
+                <td className="px-6 py-4 text-xs font-semibold text-green-600">
                   ${variant.price?.toFixed(2) || "N/A"}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
+                <td className="px-6 py-4 text-xs text-gray-900">
                   <span
                     className={
                       variant.stock > 0
@@ -513,7 +516,7 @@ const ProductVariants = () => {
                     onClick={() => handleOrderVariant(variant)}
                     disabled={variant.stock <= 0}
                     size="sm"
-                    className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-1"
+                    className="bg-green-600 hover:bg-green-700 text-white inline-flex items-center gap-1 text-xs"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     Order
@@ -521,12 +524,12 @@ const ProductVariants = () => {
                 </td>
                 {isAdmin && (
                   <td className="px-6 py-4 text-center">
-                    <div className="flex gap-2 justify-center">
+                    <div className="flex gap-2 justify-center flex-wrap">
                       <Button
                         onClick={() => handleUpdateClick(variant)}
                         disabled={isUpdating}
                         size="sm"
-                        className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-1"
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
                       >
                         <Edit2 className="w-4 h-4" />
                       </Button>
@@ -534,7 +537,7 @@ const ProductVariants = () => {
                         onClick={() => handleDeleteVariant(variant)}
                         disabled={isDeleting}
                         size="sm"
-                        className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1"
+                        className="bg-red-600 hover:bg-red-700 text-white"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -547,25 +550,134 @@ const ProductVariants = () => {
         </table>
       </div>
 
+      {/* Mobile Variants Card View */}
+      <div className="md:hidden space-y-4">
+        {variants.map((variant) => (
+          <div
+            key={variant.id}
+            className="bg-white rounded-lg shadow p-4 border border-gray-200"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <p className="text-xs text-gray-500">Variant #{variant.id}</p>
+              {variant.stock > 0 ? (
+                <span className="bg-green-50 text-green-700 text-xs font-medium px-2 py-1 rounded-full">
+                  ✓ In Stock
+                </span>
+              ) : (
+                <span className="bg-red-50 text-red-700 text-xs font-medium px-2 py-1 rounded-full">
+                  ✗ Out of Stock
+                </span>
+              )}
+            </div>
+
+            {/* Attributes */}
+            {variant.attributes &&
+            Array.isArray(variant.attributes) &&
+            variant.attributes.length > 0 ? (
+              <div className="mb-3 space-y-1">
+                {variant.attributes.map(
+                  (attr: VariantAttribute | any, idx: number) => {
+                    const attrName =
+                      typeof attr === "object" ? attr.attribute_name : null;
+                    const attrValue =
+                      typeof attr === "object" ? attr.attribute_value : null;
+
+                    if (!attrName || !attrValue) {
+                      return null;
+                    }
+
+                    return (
+                      <div key={idx} className="text-xs">
+                        <span className="font-semibold text-gray-700">
+                          {attrName}:
+                        </span>{" "}
+                        <span className="text-gray-600">{attrValue}</span>
+                      </div>
+                    );
+                  },
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500 mb-3">No attributes</p>
+            )}
+
+            {/* Price and Stock Info */}
+            <div className="bg-gray-50 p-3 rounded mb-4 text-xs space-y-1">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Price:</span>
+                <span className="font-semibold text-green-600">
+                  ${variant.price?.toFixed(2) || "N/A"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Stock:</span>
+                <span
+                  className={
+                    variant.stock > 0
+                      ? "text-green-600 font-semibold"
+                      : "text-red-600 font-semibold"
+                  }
+                >
+                  {variant.stock ?? "N/A"} units
+                </span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="space-y-2">
+              <Button
+                onClick={() => handleOrderVariant(variant)}
+                disabled={variant.stock <= 0}
+                className="w-full bg-green-600 hover:bg-green-700 text-white inline-flex items-center justify-center gap-2 text-xs"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Order Now
+              </Button>
+
+              {isAdmin && (
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={() => handleUpdateClick(variant)}
+                    disabled={isUpdating}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteVariant(variant)}
+                    disabled={isDeleting}
+                    size="sm"
+                    className="bg-red-600 hover:bg-red-700 text-white text-xs"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Summary */}
-      <div className="mt-8 text-sm text-gray-600">
+      <div className="mt-6 sm:mt-8 text-xs sm:text-sm text-gray-600">
         Showing <span className="font-semibold">{variants.length}</span> variant
         {variants.length !== 1 ? "s" : ""}
       </div>
 
       {/* Update Stock Modal */}
       {isUpdateModalOpen && selectedVariant && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 max-w-sm w-full">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
               Update Stock
             </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Variant ID: {selectedVariant.id} ({selectedVariant.attributes})
+            <p className="text-xs sm:text-sm text-gray-600 mb-4">
+              Variant ID: {selectedVariant.id}
             </p>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                 New Stock Value
               </label>
               <Input
@@ -574,6 +686,7 @@ const ProductVariants = () => {
                 onChange={(e) => setNewStock(e.target.value)}
                 placeholder="Enter stock quantity"
                 min="0"
+                className="text-xs sm:text-sm"
               />
             </div>
 
@@ -585,14 +698,14 @@ const ProductVariants = () => {
                   setSelectedVariant(null);
                 }}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 text-xs sm:text-sm"
                 disabled={isUpdating}
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleUpdateStock}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm"
                 disabled={isUpdating}
               >
                 {isUpdating ? "Updating..." : "Update Stock"}

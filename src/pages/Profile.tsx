@@ -53,40 +53,44 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
-      <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-6 sm:py-12 px-4">
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 max-w-md w-full">
         <div className="text-center">
-          <div className="mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-full">
-              <span className="text-white text-2xl font-bold">👤</span>
+          <div className="mb-4 sm:mb-6">
+            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-black rounded-full">
+              <span className="text-lg sm:text-2xl font-bold">👤</span>
             </div>
           </div>
 
           {profileData ? (
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-black">Hello!</h1>
-              <p className="text-gray-600 text-lg">
+              <h1 className="text-2xl sm:text-4xl font-bold text-black">
+                Hello!
+              </h1>
+              <p className="text-xs sm:text-lg text-gray-600">
                 Profile retrieved successfully
               </p>
 
-              <div className="bg-gray-50 rounded-lg p-6 mt-8">
-                <p className="text-sm text-gray-600 font-medium mb-2">
+              <div className="bg-gray-50 rounded-lg p-4 sm:p-6 mt-6 sm:mt-8">
+                <p className="text-xs sm:text-sm text-gray-600 font-medium mb-2">
                   Email Address
                 </p>
-                <p className="text-2xl font-semibold text-gray-900 break-all">
+                <p className="text-lg sm:text-2xl font-semibold text-gray-900 break-all">
                   {profileData.email}
                 </p>
               </div>
 
               <Button
                 onClick={() => navigate("/")}
-                className="mt-8 w-full bg-black hover:bg-gray-800 text-white py-2 rounded-lg font-semibold"
+                className="mt-6 sm:mt-8 w-full bg-black hover:bg-gray-800 text-white py-2 sm:py-3 rounded-lg font-semibold text-xs sm:text-base"
               >
                 Back
               </Button>
             </div>
           ) : (
-            <p className="text-gray-600 text-lg">No profile data available</p>
+            <p className="text-xs sm:text-lg text-gray-600 mt-4">
+              No profile data available
+            </p>
           )}
         </div>
       </div>

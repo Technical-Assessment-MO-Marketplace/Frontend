@@ -169,34 +169,40 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-3 sm:p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>Join MO Marketplace</CardDescription>
+        <CardHeader className="text-center pb-3 sm:pb-6">
+          <CardTitle className="text-xl sm:text-2xl">Create Account</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
+            Join MO Marketplace
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="text-xs sm:text-sm">
+                Full Name
+              </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={handleNameChange}
                 onBlur={handleNameBlur}
                 placeholder="John Doe"
-                className={
+                className={`text-xs sm:text-sm ${
                   errors.name ? "border-red-500 focus:border-red-500" : ""
-                }
+                }`}
               />
               {errors.name && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
+                <p className="text-xs text-red-500 flex items-center gap-1">
                   <span className="text-red-500">•</span> {errors.name}
                 </p>
               )}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-xs sm:text-sm">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -204,18 +210,20 @@ const Register = () => {
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
                 placeholder="you@example.com"
-                className={
+                className={`text-xs sm:text-sm ${
                   errors.email ? "border-red-500 focus:border-red-500" : ""
-                }
+                }`}
               />
               {errors.email && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
+                <p className="text-xs text-red-500 flex items-center gap-1">
                   <span className="text-red-500">•</span> {errors.email}
                 </p>
               )}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-xs sm:text-sm">
+                Password
+              </Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -224,9 +232,9 @@ const Register = () => {
                   onChange={handlePasswordChange}
                   onBlur={handlePasswordBlur}
                   placeholder="Min 6 characters, 1 uppercase, 1 number"
-                  className={
+                  className={`text-xs sm:text-sm ${
                     errors.password ? "border-red-500 focus:border-red-500" : ""
-                  }
+                  }`}
                 />
                 <button
                   type="button"
@@ -234,27 +242,27 @@ const Register = () => {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                   )}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-500 flex items-center gap-1">
+                <p className="text-xs text-red-500 flex items-center gap-1">
                   <span className="text-red-500">•</span> {errors.password}
                 </p>
               )}
             </div>
             <Button
               type="submit"
-              className="w-full"
+              className="w-full text-xs sm:text-sm"
               disabled={loading || Object.values(errors).some((e) => e)}
             >
               {loading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
-          <p className="text-center text-sm text-muted-foreground mt-4">
+          <p className="text-center text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
             Already have an account?{" "}
             <Link to="/login" className="text-primary underline">
               Sign in
