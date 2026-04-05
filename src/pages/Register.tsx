@@ -144,7 +144,20 @@ const Register = () => {
         description: "Redirecting to home...",
       });
     } catch (err: any) {
-      const errorMessage = err.message || "Could not create account";
+      let errorMessage = "Could not create account";
+
+      if (err.status === 409) {
+        errorMessage =
+          "This email is already registered. Please log in or use a different email.";
+      } else if (err.status === 400) {
+        errorMessage = "Invalid input. Please check all fields and try again.";
+      } else if (err.status === 0) {
+        errorMessage =
+          "Cannot connect to server. Please check your connection.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
       toast({
         title: "Registration failed",
         description: errorMessage,

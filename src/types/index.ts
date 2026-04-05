@@ -38,7 +38,7 @@ export interface Product {
 export interface Variant {
   id: number;
   product_id: number;
-  attributes: string;
+  attributes: string | VariantAttribute[];
   price: number;
   stock: number;
   created_at?: string;

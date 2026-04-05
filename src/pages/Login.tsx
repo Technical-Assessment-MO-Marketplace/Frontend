@@ -97,7 +97,17 @@ const Login = () => {
       await login(email, password);
       toast({ title: "Login successful", description: "Welcome back!" });
     } catch (err: any) {
-      const errorMessage = err.message || "Invalid credentials";
+      let errorMessage = "Login failed";
+
+      if (err.status === 401) {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (err.status === 0) {
+        errorMessage =
+          "Cannot connect to server. Please check your connection.";
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
       toast({
         title: "Login failed",
         description: errorMessage,

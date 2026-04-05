@@ -404,20 +404,33 @@ const ProductVariants = () => {
                   #{variant.id}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  {variant.attributes && Array.isArray(variant.attributes) ? (
+                  {variant.attributes ? (
                     <div className="space-y-1">
-                      {variant.attributes.map(
-                        (attr: VariantAttribute, idx: number) => (
-                          <div key={idx} className="text-xs">
-                            <span className="font-semibold text-gray-700">
-                              {attr.attribute_name}:
-                            </span>{" "}
-                            <span className="text-gray-600">
-                              {attr.attribute_value}
-                            </span>
-                          </div>
-                        ),
-                      )}
+                      {Array.isArray(variant.attributes) ? (
+                        variant.attributes.map(
+                          (attr: VariantAttribute | any, idx: number) => (
+                            <div key={idx} className="text-xs">
+                              <span className="font-semibold text-gray-700">
+                                {typeof attr === "object" && attr.attribute_name
+                                  ? attr.attribute_name
+                                  : "Attribute"}
+                                :
+                              </span>{" "}
+                              <span className="text-gray-600">
+                                {typeof attr === "object" &&
+                                attr.attribute_value
+                                  ? attr.attribute_value
+                                  : String(attr)}
+                              </span>
+                            </div>
+                          ),
+                        )
+                      ) : typeof variant.attributes === "string" &&
+                        variant.attributes ? (
+                        <div className="text-xs text-gray-600">
+                          {variant.attributes}
+                        </div>
+                      ) : null}
                     </div>
                   ) : (
                     <span className="text-gray-500">No attributes</span>
