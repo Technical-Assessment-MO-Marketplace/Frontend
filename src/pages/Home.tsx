@@ -57,7 +57,7 @@ const Home = () => {
                 Manage your account and view your marketplace activity.
               </p>
               <Button
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/home")}
                 variant="outline"
                 className="w-full"
               >
