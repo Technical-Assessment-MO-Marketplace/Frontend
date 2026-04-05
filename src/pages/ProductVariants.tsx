@@ -234,9 +234,11 @@ const ProductVariants = () => {
               <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                 Order
               </th>
-              <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
-                Actions
-              </th>
+              {isAuthenticated && (
+                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -287,30 +289,32 @@ const ProductVariants = () => {
                     Order
                   </Button>
                 </td>
-                <td className="px-6 py-4 text-center">
-                  <div className="flex gap-2 justify-center">
-                    {isAdmin && (
-                      <>
-                        <Button
-                          onClick={() => handleUpdateClick(variant)}
-                          disabled={isUpdating}
-                          size="sm"
-                          className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-1"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          onClick={() => handleDeleteVariant(variant)}
-                          disabled={isDeleting}
-                          size="sm"
-                          className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </td>
+                {isAuthenticated && (
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex gap-2 justify-center">
+                      {isAdmin && (
+                        <>
+                          <Button
+                            onClick={() => handleUpdateClick(variant)}
+                            disabled={isUpdating}
+                            size="sm"
+                            className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-1"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            onClick={() => handleDeleteVariant(variant)}
+                            disabled={isDeleting}
+                            size="sm"
+                            className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
