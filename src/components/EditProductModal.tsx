@@ -3,13 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { adminProductsApi } from "@/lib/api";
 import { toast } from "sonner";
-
-interface EditProductModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-  product: { id: number; name: string; description: string } | null;
-}
+import type { EditProductModalProps } from "@/types";
 
 const EditProductModal = ({
   isOpen,

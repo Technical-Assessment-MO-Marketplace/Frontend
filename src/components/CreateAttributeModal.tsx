@@ -3,12 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { adminAttributesApi } from "@/lib/api";
 import { toast } from "sonner";
-
-interface CreateAttributeModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-}
+import type { CreateAttributeModalProps } from "@/types";
 
 const CreateAttributeModal = ({
   isOpen,

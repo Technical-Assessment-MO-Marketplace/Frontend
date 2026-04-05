@@ -3,25 +3,11 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { adminProductsApi, adminAttributesApi } from "@/lib/api";
 import { toast } from "sonner";
-
-interface AttributeValue {
-  id: number;
-  value: string;
-}
-
-interface Attribute {
-  id: number;
-  name: string;
-  values?: AttributeValue[];
-}
-
-interface CreateVariantModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-  productId: number | null;
-  productName?: string;
-}
+import type {
+  CreateVariantModalProps,
+  AttributeValue,
+  Attribute,
+} from "@/types";
 
 const CreateVariantModal = ({
   isOpen,

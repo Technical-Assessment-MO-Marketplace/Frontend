@@ -3,39 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ordersApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { ChevronDown, Eye, AlertCircle } from "lucide-react";
+import { ChevronDown, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/Loading";
-
-interface OrderItem {
-  id: number;
-  quantity: number;
-  price: number;
-  product: {
-    id: number;
-    name: string;
-    description: string;
-  };
-  variant: {
-    id: number;
-    combination_key: string;
-    price: number;
-    stock: number;
-  };
-}
-
-interface Order {
-  id: number;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
-  total_amount: number;
-  status: string;
-  created_at: string;
-  items: OrderItem[];
-}
+import { ErrorDisplay } from "@/components/Error";
+import type { Order, OrderItem } from "@/types";
 
 const Orders = () => {
   const navigate = useNavigate();
@@ -128,12 +100,7 @@ const Orders = () => {
         </p>
       </div>
 
-      {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600" />
-          <span className="text-red-800">{error}</span>
-        </div>
-      )}
+      {error && <ErrorDisplay message={error} variant="inline" />}
 
       {/* Filter Section */}
       <div className="mb-6 flex items-center gap-3">

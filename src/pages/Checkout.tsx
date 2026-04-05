@@ -6,42 +6,7 @@ import { Loader, ChevronLeft, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { ordersApi } from "@/lib/api";
 import { LoadingSpinner } from "@/components/Loading";
-
-interface Variant {
-  id: number;
-  product_id: number;
-  attributes: string;
-  price: number;
-  stock: number;
-  created_at?: string;
-  [key: string]: any;
-}
-
-interface CheckoutState {
-  variant: Variant;
-  productId: string;
-}
-
-interface OrderResponse {
-  statusCode: number;
-  message: string;
-  data: {
-    id: number;
-    user_id: number;
-    total_amount: number;
-    status: string;
-    created_at: string;
-    items: Array<{
-      id: number;
-      order_id: number;
-      product_id: number;
-      variant_id: number;
-      quantity: number;
-      price: number;
-      created_at: string;
-    }>;
-  };
-}
+import type { Variant, CheckoutState, OrderResponse } from "@/types";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -144,8 +109,6 @@ const Checkout = () => {
 
     setProcessingPayment(true);
     try {
-      // TODO: Replace with actual Stripe Payment Intent creation
-      // For now, creating order with card payment intention
       const response = await ordersApi.create({
         items: [
           {

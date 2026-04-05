@@ -3,12 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { adminProductsApi } from "@/lib/api";
 import { toast } from "sonner";
-
-interface CreateProductModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-}
+import type { CreateProductModalProps } from "@/types";
 
 const CreateProductModal = ({
   isOpen,

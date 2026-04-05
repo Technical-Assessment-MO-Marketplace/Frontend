@@ -7,16 +7,8 @@ import CreateAttributeModal from "@/components/CreateAttributeModal";
 import AddAttributeValueModal from "@/components/AddAttributeValueModal";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/Loading";
-
-interface AttributeValue {
-  id: number;
-  value: string;
-}
-
-interface Attribute {
-  id: number;
-  name: string;
-}
+import { ErrorDisplay } from "@/components/Error";
+import type { Attribute, AttributeValue } from "@/types";
 
 const Attributes = () => {
   const { isAdmin } = useAuth();
@@ -139,18 +131,11 @@ const Attributes = () => {
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700">
-          <h2 className="text-lg font-semibold mb-2">Error</h2>
-          <p>{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorDisplay
+        message={error}
+        variant="default"
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 

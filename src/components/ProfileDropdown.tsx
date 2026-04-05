@@ -2,10 +2,7 @@ import { User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
-interface ProfileDropdownProps {
-  onClose: () => void;
-}
+import type { ProfileDropdownProps } from "@/types";
 
 const ProfileDropdown = ({ onClose }: ProfileDropdownProps) => {
   const { user, logout } = useAuth();

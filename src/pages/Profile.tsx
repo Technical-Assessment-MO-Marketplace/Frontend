@@ -4,10 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api";
 import { LoadingSpinner } from "@/components/Loading";
-
-interface ProfileData {
-  email: string;
-}
+import { ErrorDisplay } from "@/components/Error";
+import type { ProfileData } from "@/types";
 
 const Profile = () => {
   const { isAuthenticated } = useAuth();
@@ -46,23 +44,11 @@ const Profile = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
-        <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full text-center">
-          <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full">
-              <span className="text-red-600 text-2xl font-bold">⚠️</span>
-            </div>
-          </div>
-          <p className="text-red-600 mb-6 text-lg font-semibold">Error</p>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="w-full bg-black hover:bg-gray-800 text-white py-2 rounded-lg font-semibold"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorDisplay
+        message={error}
+        variant="profile"
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 

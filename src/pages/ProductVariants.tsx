@@ -7,33 +7,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ChevronLeft, Edit2, Trash2, ShoppingCart, X } from "lucide-react";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/Loading";
-
-interface Variant {
-  id: number;
-  product_id: number;
-  attributes: string;
-  price: number;
-  stock: number;
-  created_at?: string;
-  [key: string]: any;
-}
-
-interface AttributeValue {
-  id: number;
-  value: string;
-}
-
-interface Attribute {
-  attribute_id: number;
-  attribute_name: string;
-  values: AttributeValue[];
-}
-
-interface VariantAttribute {
-  attribute_name: string;
-  attribute_value: string;
-  attribute_value_id: number;
-}
+import { ErrorDisplay } from "@/components/Error";
+import type {
+  Variant,
+  AttributeValue,
+  Attribute,
+  VariantAttribute,
+} from "@/types";
 
 const ProductVariants = () => {
   const { id } = useParams<{ id: string }>();
@@ -235,26 +215,12 @@ const ProductVariants = () => {
 
   if (error) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <Button
-          onClick={() => navigate("/products")}
-          variant="outline"
-          className="mb-6 flex items-center gap-2"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Back to Products
-        </Button>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-red-700">
-          <h2 className="text-lg font-semibold mb-2">Error</h2>
-          <p>{error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
+      <ErrorDisplay
+        message={error}
+        variant="card"
+        onRetry={() => window.location.reload()}
+        onBack={() => navigate("/products")}
+      />
     );
   }
 

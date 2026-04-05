@@ -1,10 +1,5 @@
 import { Loader } from "lucide-react";
-
-interface LoadingSpinnerProps {
-  message?: string;
-  variant?: "default" | "centered" | "compact" | "profile";
-  fullHeight?: boolean;
-}
+import type { LoadingSpinnerProps } from "@/types";
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   message,

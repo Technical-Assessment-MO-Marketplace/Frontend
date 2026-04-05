@@ -3,12 +3,7 @@ import { X, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api";
 import { toast } from "sonner";
-
-interface CreateAdminModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-}
+import type { CreateAdminModalProps } from "@/types";
 
 const CreateAdminModal = ({
   isOpen,

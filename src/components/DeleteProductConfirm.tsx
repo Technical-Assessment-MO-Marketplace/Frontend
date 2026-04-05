@@ -2,13 +2,7 @@ import { Button } from "@/components/ui/button";
 import { adminProductsApi } from "@/lib/api";
 import { toast } from "sonner";
 import { useState } from "react";
-
-interface DeleteProductConfirmProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess: () => void;
-  product: { id: number; name: string } | null;
-}
+import type { DeleteProductConfirmProps } from "@/types";
 
 const DeleteProductConfirm = ({
   isOpen,
