@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { productsApi, adminProductsApi } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
 import { Loader, ChevronLeft, Edit2, Trash2, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,6 +20,7 @@ interface Variant {
 const ProductVariants = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [variants, setVariants] = useState<Variant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -283,22 +285,26 @@ const ProductVariants = () => {
                 </td>
                 <td className="px-6 py-4 text-center">
                   <div className="flex gap-2 justify-center">
-                    <Button
-                      onClick={() => handleUpdateClick(variant)}
-                      disabled={isUpdating}
-                      size="sm"
-                      className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-1"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteVariant(variant)}
-                      disabled={isDeleting}
-                      size="sm"
-                      className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    {isAdmin && (
+                      <>
+                        <Button
+                          onClick={() => handleUpdateClick(variant)}
+                          disabled={isUpdating}
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center gap-1"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          onClick={() => handleDeleteVariant(variant)}
+                          disabled={isDeleting}
+                          size="sm"
+                          className="bg-red-600 hover:bg-red-700 text-white inline-flex items-center gap-1"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
