@@ -453,7 +453,24 @@ const ProductVariants = () => {
                   #{variant.id}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  {variant.attributes}
+                  {variant.attributes && Array.isArray(variant.attributes) ? (
+                    <div className="space-y-1">
+                      {variant.attributes.map(
+                        (attr: VariantAttribute, idx: number) => (
+                          <div key={idx} className="text-xs">
+                            <span className="font-semibold text-gray-700">
+                              {attr.attribute_name}:
+                            </span>{" "}
+                            <span className="text-gray-600">
+                              {attr.attribute_value}
+                            </span>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-gray-500">No attributes</span>
+                  )}
                 </td>
                 <td className="px-6 py-4 text-sm font-semibold text-green-600">
                   ${variant.price?.toFixed(2) || "N/A"}
