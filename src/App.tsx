@@ -13,6 +13,7 @@ import Products from "@/pages/Products";
 import ProductVariants from "@/pages/ProductVariants";
 import Attributes from "@/pages/Attributes";
 import Checkout from "@/pages/Checkout";
+import Orders from "@/pages/Orders";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/attributes" element={<Attributes />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </AuthProvider>
