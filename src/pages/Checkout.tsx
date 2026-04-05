@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Loader, ChevronLeft, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { ordersApi } from "@/lib/api";
+import { LoadingSpinner } from "@/components/Loading";
 
 interface Variant {
   id: number;
@@ -74,16 +75,7 @@ const Checkout = () => {
   }, [location, navigate]);
 
   if (!variant) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <Loader className="w-8 h-8 animate-spin mx-auto mb-2" />
-            <p className="text-gray-600">Loading checkout...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading checkout..." variant="default" />;
   }
 
   const totalPrice = variant.price * quantity;

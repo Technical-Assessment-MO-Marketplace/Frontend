@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ordersApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader, ChevronDown, Eye, AlertCircle } from "lucide-react";
+import { ChevronDown, Eye, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { LoadingSpinner } from "@/components/Loading";
 
 interface OrderItem {
   id: number;
@@ -115,11 +116,7 @@ const Orders = () => {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <Loader className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <LoadingSpinner variant="centered" />;
   }
 
   return (

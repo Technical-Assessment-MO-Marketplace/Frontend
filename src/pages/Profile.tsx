@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api";
+import { LoadingSpinner } from "@/components/Loading";
 
 interface ProfileData {
   email: string;
@@ -40,14 +41,7 @@ const Profile = () => {
   }, [isAuthenticated, navigate]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
-        <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading profile...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading profile..." variant="profile" />;
   }
 
   if (error) {

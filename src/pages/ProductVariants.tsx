@@ -4,15 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { productsApi, adminProductsApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  Loader,
-  ChevronLeft,
-  Edit2,
-  Trash2,
-  ShoppingCart,
-  X,
-} from "lucide-react";
+import { ChevronLeft, Edit2, Trash2, ShoppingCart, X } from "lucide-react";
 import { toast } from "sonner";
+import { LoadingSpinner } from "@/components/Loading";
 
 interface Variant {
   id: number;
@@ -236,16 +230,7 @@ const ProductVariants = () => {
   };
 
   if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <Loader className="w-8 h-8 animate-spin mx-auto mb-2" />
-            <p className="text-gray-600">Loading variants...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Loading variants..." variant="default" />;
   }
 
   if (error) {
