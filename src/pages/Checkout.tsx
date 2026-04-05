@@ -212,7 +212,25 @@ const Checkout = () => {
               <div className="flex justify-between mb-3">
                 <span className="text-gray-600">Attributes</span>
                 <span className="font-semibold text-gray-900 text-right max-w-xs">
-                  {variant.attributes}
+                  {(() => {
+                    if (
+                      Array.isArray(variant.attributes) &&
+                      variant.attributes.length > 0
+                    ) {
+                      return variant.attributes
+                        .map((attr: any) => {
+                          if (typeof attr === "object" && attr.attribute_name) {
+                            return `${attr.attribute_name}: ${attr.attribute_value || ""}`;
+                          }
+                          return String(attr);
+                        })
+                        .join(", ");
+                    }
+                    if (typeof variant.attributes === "string") {
+                      return variant.attributes;
+                    }
+                    return "No attributes";
+                  })()}
                 </span>
               </div>
               <div className="flex justify-between mb-3">

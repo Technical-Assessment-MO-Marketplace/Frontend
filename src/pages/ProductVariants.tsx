@@ -48,8 +48,11 @@ const ProductVariants = () => {
         const variantsResponse = await productsApi.getVariants(parseInt(id));
         const variantsList =
           variantsResponse.data.variants || variantsResponse.data.data || [];
-        setVariants(variantsList);
-        setAllVariants(variantsList);
+
+        // Normalize variants to ensure attributes are arrays
+        const normalizedList = variantsList.map(normalizeVariant);
+        setVariants(normalizedList);
+        setAllVariants(normalizedList);
 
         // Fetch attributes
         try {
@@ -160,15 +163,33 @@ const ProductVariants = () => {
   };
 
   const normalizeVariant = (variant: any): Variant => {
-    // Ensure variant has all required properties
+    // Safely handle attributes - convert to array if needed
+    let normalizedAttributes: any = [];
+
+    if (variant.attributes) {
+      if (Array.isArray(variant.attributes)) {
+        normalizedAttributes = variant.attributes;
+      } else if (typeof variant.attributes === "string") {
+        // If it's a JSON string, try to parse it
+        try {
+          const parsed = JSON.parse(variant.attributes);
+          normalizedAttributes = Array.isArray(parsed) ? parsed : [];
+        } catch {
+          normalizedAttributes = variant.attributes;
+        }
+      } else if (typeof variant.attributes === "object") {
+        // If it's a single object, wrap it in an array
+        normalizedAttributes = [variant.attributes];
+      }
+    }
+
     return {
       id: variant.id || variant.variant_id,
       product_id: variant.product_id || parseInt(id || "0"),
-      attributes: variant.attributes || [],
+      attributes: normalizedAttributes,
       price: Number(variant.price) || 0,
       stock: Number(variant.stock) || 0,
       created_at: variant.created_at,
-      ...variant,
     };
   };
 
@@ -427,33 +448,36 @@ const ProductVariants = () => {
                   #{variant.id}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  {variant.attributes ? (
+                  {variant.attributes &&
+                  Array.isArray(variant.attributes) &&
+                  variant.attributes.length > 0 ? (
                     <div className="space-y-1">
-                      {Array.isArray(variant.attributes) ? (
-                        variant.attributes.map(
-                          (attr: VariantAttribute | any, idx: number) => (
+                      {variant.attributes.map(
+                        (attr: VariantAttribute | any, idx: number) => {
+                          // Safely access attribute properties
+                          const attrName =
+                            typeof attr === "object"
+                              ? attr.attribute_name
+                              : null;
+                          const attrValue =
+                            typeof attr === "object"
+                              ? attr.attribute_value
+                              : null;
+
+                          if (!attrName || !attrValue) {
+                            return null;
+                          }
+
+                          return (
                             <div key={idx} className="text-xs">
                               <span className="font-semibold text-gray-700">
-                                {typeof attr === "object" && attr.attribute_name
-                                  ? attr.attribute_name
-                                  : "Attribute"}
-                                :
+                                {attrName}:
                               </span>{" "}
-                              <span className="text-gray-600">
-                                {typeof attr === "object" &&
-                                attr.attribute_value
-                                  ? attr.attribute_value
-                                  : String(attr)}
-                              </span>
+                              <span className="text-gray-600">{attrValue}</span>
                             </div>
-                          ),
-                        )
-                      ) : typeof variant.attributes === "string" &&
-                        variant.attributes ? (
-                        <div className="text-xs text-gray-600">
-                          {variant.attributes}
-                        </div>
-                      ) : null}
+                          );
+                        },
+                      )}
                     </div>
                   ) : (
                     <span className="text-gray-500">No attributes</span>
