@@ -13,15 +13,21 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const desktopDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+      const isOutsideDesktop =
+        desktopDropdownRef.current &&
+        !desktopDropdownRef.current.contains(target);
+      const isOutsideMobile =
+        mobileDropdownRef.current &&
+        !mobileDropdownRef.current.contains(target);
+
+      if (isOutsideDesktop && isOutsideMobile) {
         setShowDropdown(false);
       }
     };
@@ -95,7 +101,7 @@ const Navbar = () => {
             {!isAuthenticated ? (
               <Button onClick={() => navigate("/login")}>Login</Button>
             ) : (
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative" ref={desktopDropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 hover:bg-gray-400 transition-colors"
@@ -114,7 +120,7 @@ const Navbar = () => {
           {/* Mobile Menu Button & Profile */}
           <div className="flex items-center space-x-2 md:hidden">
             {isAuthenticated ? (
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative" ref={mobileDropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-300 hover:bg-gray-400 transition-colors"
