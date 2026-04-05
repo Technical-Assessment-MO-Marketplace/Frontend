@@ -19,6 +19,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
   const { login, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -29,8 +32,66 @@ const Login = () => {
     }
   }, [isAuthenticated, authLoading, navigate]);
 
+  const validateEmail = (value: string): string | undefined => {
+    if (!value.trim()) {
+      return "Email is required";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return "Please enter a valid email address";
+    }
+    return undefined;
+  };
+
+  const validatePassword = (value: string): string | undefined => {
+    if (!value) {
+      return "Password is required";
+    }
+    if (value.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+    return undefined;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (errors.email) {
+      const error = validateEmail(value);
+      setErrors({ ...errors, email: error });
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (errors.password) {
+      const error = validatePassword(value);
+      setErrors({ ...errors, password: error });
+    }
+  };
+
+  const handleEmailBlur = () => {
+    const error = validateEmail(email);
+    setErrors({ ...errors, email: error });
+  };
+
+  const handlePasswordBlur = () => {
+    const error = validatePassword(password);
+    setErrors({ ...errors, password: error });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (emailError || passwordError) {
+      setErrors({ email: emailError, password: passwordError });
+      return;
+    }
+
     setLoading(true);
     try {
       await login(email, password);
@@ -56,28 +117,38 @@ const Login = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
                 placeholder="you@example.com"
+                className={
+                  errors.email ? "border-red-500 focus:border-red-500" : ""
+                }
               />
+              {errors.email && (
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span className="text-red-500">•</span> {errors.email}
+                </p>
+              )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  required
-                  minLength={6}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
+                  onBlur={handlePasswordBlur}
                   placeholder="••••••••"
+                  className={
+                    errors.password ? "border-red-500 focus:border-red-500" : ""
+                  }
                 />
                 <button
                   type="button"
@@ -91,8 +162,17 @@ const Login = () => {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span className="text-red-500">•</span> {errors.password}
+                </p>
+              )}
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || Object.values(errors).some((e) => e)}
+            >
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>

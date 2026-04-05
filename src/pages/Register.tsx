@@ -20,6 +20,11 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
   const { register, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -30,8 +35,107 @@ const Register = () => {
     }
   }, [isAuthenticated, authLoading, navigate]);
 
+  const validateName = (value: string): string | undefined => {
+    if (!value.trim()) {
+      return "Full name is required";
+    }
+    if (value.trim().length < 2) {
+      return "Name must be at least 2 characters";
+    }
+    if (value.trim().length > 50) {
+      return "Name must not exceed 50 characters";
+    }
+    return undefined;
+  };
+
+  const validateEmail = (value: string): string | undefined => {
+    if (!value.trim()) {
+      return "Email is required";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      return "Please enter a valid email address";
+    }
+    return undefined;
+  };
+
+  const validatePassword = (value: string): string | undefined => {
+    if (!value) {
+      return "Password is required";
+    }
+    if (value.length < 6) {
+      return "Password must be at least 6 characters";
+    }
+    if (value.length > 128) {
+      return "Password must not exceed 128 characters";
+    }
+    if (!/[A-Z]/.test(value)) {
+      return "Password must contain at least one uppercase letter";
+    }
+    if (!/[0-9]/.test(value)) {
+      return "Password must contain at least one number";
+    }
+    return undefined;
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setName(value);
+    if (errors.name) {
+      const error = validateName(value);
+      setErrors({ ...errors, name: error });
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (errors.email) {
+      const error = validateEmail(value);
+      setErrors({ ...errors, email: error });
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (errors.password) {
+      const error = validatePassword(value);
+      setErrors({ ...errors, password: error });
+    }
+  };
+
+  const handleNameBlur = () => {
+    const error = validateName(name);
+    setErrors({ ...errors, name: error });
+  };
+
+  const handleEmailBlur = () => {
+    const error = validateEmail(email);
+    setErrors({ ...errors, email: error });
+  };
+
+  const handlePasswordBlur = () => {
+    const error = validatePassword(password);
+    setErrors({ ...errors, password: error });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (nameError || emailError || passwordError) {
+      setErrors({
+        name: nameError,
+        email: emailError,
+        password: passwordError,
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       await register(name, email, password);
@@ -60,38 +164,56 @@ const Register = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="name">Full Name</Label>
               <Input
                 id="name"
-                required
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleNameChange}
+                onBlur={handleNameBlur}
                 placeholder="John Doe"
+                className={
+                  errors.name ? "border-red-500 focus:border-red-500" : ""
+                }
               />
+              {errors.name && (
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span className="text-red-500">•</span> {errors.name}
+                </p>
+              )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
                 placeholder="you@example.com"
+                className={
+                  errors.email ? "border-red-500 focus:border-red-500" : ""
+                }
               />
+              {errors.email && (
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span className="text-red-500">•</span> {errors.email}
+                </p>
+              )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  required
-                  minLength={6}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 6 characters"
+                  onChange={handlePasswordChange}
+                  onBlur={handlePasswordBlur}
+                  placeholder="Min 6 characters, 1 uppercase, 1 number"
+                  className={
+                    errors.password ? "border-red-500 focus:border-red-500" : ""
+                  }
                 />
                 <button
                   type="button"
@@ -105,8 +227,17 @@ const Register = () => {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span className="text-red-500">•</span> {errors.password}
+                </p>
+              )}
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || Object.values(errors).some((e) => e)}
+            >
               {loading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
