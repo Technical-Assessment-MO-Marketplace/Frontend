@@ -57,7 +57,7 @@ const ProductVariants = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [selectedAttributeValues, setSelectedAttributeValues] = useState<{
-    [key: number]: number[];
+    [key: number]: number | null;
   }>({});
 
   useEffect(() => {
@@ -182,9 +182,9 @@ const ProductVariants = () => {
   const handleFilterVariants = async () => {
     if (!id) return;
 
-    const selectedValues = Object.values(selectedAttributeValues)
-      .flat()
-      .filter((v) => v !== null) as number[];
+    const selectedValues = Object.values(selectedAttributeValues).filter(
+      (v) => v !== null,
+    ) as number[];
 
     if (selectedValues.length === 0) {
       setVariants(allVariants);
@@ -222,18 +222,15 @@ const ProductVariants = () => {
   };
 
   const hasActiveFilters = Object.values(selectedAttributeValues).some(
-    (values) => Array.isArray(values) && values.length > 0,
+    (v) => v !== null,
   );
 
   const toggleAttributeValue = (attributeId: number, valueId: number) => {
     setSelectedAttributeValues((prev) => {
-      const current = prev[attributeId] || [];
-      const isSelected = current.includes(valueId);
+      const current = prev[attributeId];
       return {
         ...prev,
-        [attributeId]: isSelected
-          ? current.filter((id) => id !== valueId)
-          : [...current, valueId],
+        [attributeId]: current === valueId ? null : valueId,
       };
     });
   };
@@ -338,18 +335,19 @@ const ProductVariants = () => {
                         className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded transition"
                       >
                         <input
-                          type="checkbox"
-                          checked={(
-                            selectedAttributeValues[attribute.attribute_id] ||
-                            []
-                          ).includes(value.id)}
+                          type="radio"
+                          name={`attribute-${attribute.attribute_id}`}
+                          checked={
+                            selectedAttributeValues[attribute.attribute_id] ===
+                            value.id
+                          }
                           onChange={() =>
                             toggleAttributeValue(
                               attribute.attribute_id,
                               value.id,
                             )
                           }
-                          className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                          className="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500"
                         />
                         <span className="text-sm text-gray-700">
                           {value.value}
@@ -360,12 +358,11 @@ const ProductVariants = () => {
                     <p className="text-sm text-gray-500">No values available</p>
                   )}
                 </div>
-                {(selectedAttributeValues[attribute.attribute_id] || [])
-                  .length > 0 && (
+                {selectedAttributeValues[attribute.attribute_id] && (
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {(
-                      selectedAttributeValues[attribute.attribute_id] || []
-                    ).map((valueId) => {
+                    {(() => {
+                      const valueId =
+                        selectedAttributeValues[attribute.attribute_id];
                       const value = attribute.values?.find(
                         (v) => v.id === valueId,
                       );
@@ -388,7 +385,7 @@ const ProductVariants = () => {
                           </button>
                         </span>
                       ) : null;
-                    })}
+                    })()}
                   </div>
                 )}
               </div>
