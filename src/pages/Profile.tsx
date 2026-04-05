@@ -53,7 +53,15 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 py-6 sm:py-12 px-4">
+    <div
+      className="min-h-screen flex items-center justify-center py-6 sm:py-12 px-4"
+      style={{
+        backgroundImage: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-12 max-w-md w-full">
         <div className="text-center">
           <div className="mb-4 sm:mb-6">
