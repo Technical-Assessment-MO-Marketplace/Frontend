@@ -4,7 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { productsApi, adminProductsApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader, ChevronLeft, Edit2, Trash2, ShoppingCart } from "lucide-react";
+import {
+  Loader,
+  ChevronLeft,
+  Edit2,
+  Trash2,
+  ShoppingCart,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 
 interface Variant {
@@ -17,21 +24,44 @@ interface Variant {
   [key: string]: any;
 }
 
+interface AttributeValue {
+  id: number;
+  value: string;
+}
+
+interface Attribute {
+  attribute_id: number;
+  attribute_name: string;
+  values: AttributeValue[];
+}
+
+interface VariantAttribute {
+  attribute_name: string;
+  attribute_value: string;
+  attribute_value_id: number;
+}
+
 const ProductVariants = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAdmin, isAuthenticated } = useAuth();
   const [variants, setVariants] = useState<Variant[]>([]);
+  const [allVariants, setAllVariants] = useState<Variant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
   const [newStock, setNewStock] = useState<string>("");
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [selectedAttributeValues, setSelectedAttributeValues] = useState<{
+    [key: number]: number[];
+  }>({});
 
   useEffect(() => {
-    const fetchVariants = async () => {
+    const fetchData = async () => {
       if (!id) {
         setError("Invalid product ID");
         setLoading(false);
@@ -40,8 +70,26 @@ const ProductVariants = () => {
 
       try {
         setLoading(true);
-        const response = await productsApi.getVariants(parseInt(id));
-        setVariants(response.data.variants || response.data.data || []);
+        // Fetch variants
+        const variantsResponse = await productsApi.getVariants(parseInt(id));
+        const variantsList =
+          variantsResponse.data.variants || variantsResponse.data.data || [];
+        setVariants(variantsList);
+        setAllVariants(variantsList);
+
+        // Fetch attributes
+        try {
+          const attributesResponse = await productsApi.getProductAttributes(
+            parseInt(id),
+          );
+          const attributesList =
+            attributesResponse.data.attributes ||
+            attributesResponse.data.data ||
+            [];
+          setAttributes(attributesList);
+        } catch (attrErr) {
+          console.log("Attributes not available");
+        }
         setError(null);
       } catch (err: any) {
         const errorMessage = err.message || "Failed to load variants";
@@ -51,7 +99,7 @@ const ProductVariants = () => {
       }
     };
 
-    fetchVariants();
+    fetchData();
   }, [id]);
 
   const handleUpdateStock = async () => {
@@ -129,6 +177,65 @@ const ProductVariants = () => {
     }
     // Navigate to checkout page with variant data
     navigate("/checkout", { state: { variant, productId: id } });
+  };
+
+  const handleFilterVariants = async () => {
+    if (!id) return;
+
+    const selectedValues = Object.values(selectedAttributeValues)
+      .flat()
+      .filter((v) => v !== null) as number[];
+
+    if (selectedValues.length === 0) {
+      setVariants(allVariants);
+      toast.info("All filters cleared");
+      return;
+    }
+
+    setFilterLoading(true);
+    try {
+      const response = await productsApi.filterVariants(
+        parseInt(id),
+        selectedValues,
+      );
+      const filteredVariants =
+        response.data.variants || response.data.data || [];
+      setVariants(filteredVariants);
+
+      if (filteredVariants.length === 0) {
+        toast.info("No variants found with selected attributes");
+      } else {
+        toast.success(`Found ${filteredVariants.length} variant(s)`);
+      }
+    } catch (err: any) {
+      const errorMessage = err.message || "Failed to filter variants";
+      toast.error(errorMessage);
+    } finally {
+      setFilterLoading(false);
+    }
+  };
+
+  const handleClearFilters = () => {
+    setSelectedAttributeValues({});
+    setVariants(allVariants);
+    toast.info("Filters cleared");
+  };
+
+  const hasActiveFilters = Object.values(selectedAttributeValues).some(
+    (values) => Array.isArray(values) && values.length > 0,
+  );
+
+  const toggleAttributeValue = (attributeId: number, valueId: number) => {
+    setSelectedAttributeValues((prev) => {
+      const current = prev[attributeId] || [];
+      const isSelected = current.includes(valueId);
+      return {
+        ...prev,
+        [attributeId]: isSelected
+          ? current.filter((id) => id !== valueId)
+          : [...current, valueId],
+      };
+    });
   };
 
   if (loading) {
@@ -210,6 +317,104 @@ const ProductVariants = () => {
           <span className="font-semibold">Product #{id}</span>
         </p>
       </div>
+
+      {/* Filter Section */}
+      {attributes.length > 0 && (
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Filter Variants by Attributes
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {attributes.map((attribute) => (
+              <div key={attribute.attribute_id}>
+                <label className="block text-sm font-bold text-gray-800 mb-3">
+                  Select {attribute.attribute_name}:
+                </label>
+                <div className="space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                  {attribute.values && attribute.values.length > 0 ? (
+                    attribute.values.map((value) => (
+                      <label
+                        key={value.id}
+                        className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded transition"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={(
+                            selectedAttributeValues[attribute.attribute_id] ||
+                            []
+                          ).includes(value.id)}
+                          onChange={() =>
+                            toggleAttributeValue(
+                              attribute.attribute_id,
+                              value.id,
+                            )
+                          }
+                          className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700">
+                          {value.value}
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500">No values available</p>
+                  )}
+                </div>
+                {(selectedAttributeValues[attribute.attribute_id] || [])
+                  .length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {(
+                      selectedAttributeValues[attribute.attribute_id] || []
+                    ).map((valueId) => {
+                      const value = attribute.values?.find(
+                        (v) => v.id === valueId,
+                      );
+                      return value ? (
+                        <span
+                          key={valueId}
+                          className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+                        >
+                          {value.value}
+                          <button
+                            onClick={() =>
+                              toggleAttributeValue(
+                                attribute.attribute_id,
+                                valueId,
+                              )
+                            }
+                            className="ml-1 hover:text-blue-600"
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      ) : null;
+                    })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleFilterVariants}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={filterLoading}
+            >
+              {filterLoading ? "Filtering..." : "Search"}
+            </Button>
+            {hasActiveFilters && (
+              <Button
+                onClick={handleClearFilters}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <X className="w-4 h-4" />
+                Clear Filters
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Variants Table */}
       <div className="bg-white rounded-lg shadow overflow-x-auto">
