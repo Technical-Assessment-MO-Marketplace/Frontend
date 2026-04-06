@@ -41,7 +41,6 @@ const Home = () => {
           <p className="text-sm sm:text-base text-gray-600 mt-2">
             Hello,{" "}
             <span className="font-semibold">{user?.name || user?.email}</span>!
-            👋
           </p>
         </div>
 
